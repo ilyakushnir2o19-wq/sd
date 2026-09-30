@@ -27,3 +27,19 @@ jobs:
           uv sync --dev
       - name: Run Opportunity Hunter contract tests
         run: uv run pytest -q tests/test_attio_crm.py tests/test_template_gallery.py
+
+      - name: Run full Python test suite
+        run: uv run pytest -q
+
+      - name: Build frontend
+        run: |
+          curl -fsSL https://bun.sh/install | bash
+          export BUN_INSTALL="$HOME/.bun"
+          export PATH="$BUN_INSTALL/bin:$PATH"
+          bun install --frozen-lockfile
+          bun run build
+
+      - name: Validate Docker Compose
+        run: |
+          cp .env.example .env
+          docker compose config -q
