@@ -251,6 +251,9 @@ async def _push_crm(cfg: dict, lead_data: dict, workspace_id: Optional[str],
     elif crm_type == "salesforce":
         from apps.api.services.crm import salesforce as crm
         label, id_key = "Salesforce", "salesforce_id"
+    elif crm_type == "attio":
+        from apps.api.services.crm import attio as crm
+        label, id_key = "Attio", "attio_id"
     else:
         return {"success": False, "value": "", "error": f"unsupported crm '{crm_type}'"}
 
@@ -271,10 +274,17 @@ async def _push_crm(cfg: dict, lead_data: dict, workspace_id: Optional[str],
         fields = _crm_update_fields(crm_type, cfg, lead_data)
         if crm_type == "hubspot":
             res = await crm.update_contact_by_id(ext_id, fields, workspace_id=workspace_id)
-        else:
+        elif crm_type == "salesforce":
             crm_object = str(lead_data.get("crm_object") or "contact").lower()
             sobject = {"contact": "Contact", "lead": "Lead"}.get(crm_object, "Contact")
             res = await crm.update_record(sobject, ext_id, fields, workspace_id=workspace_id)
+        else:
+            res = await crm.update_person_by_id(
+                ext_id,
+                lead_data,
+                cfg.get("field_map"),
+                workspace_id=workspace_id,
+            )
         if res.get("success"):
             return {"success": True, "value": f"{label}: updated {ext_id}", "error": None}
         if not res.get("not_found"):
@@ -291,8 +301,13 @@ async def _push_crm(cfg: dict, lead_data: dict, workspace_id: Optional[str],
     if res.get("success"):
         new_id = res.get(id_key)
         if crm_deleted and new_id and workbook_id and lead_id is not None:
-            # Salesforce's create path makes a Lead sObject, not a Contact.
-            new_object = "contact" if crm_type == "hubspot" else "lead"
+            # Salesforce creates a Lead; HubSpot and Attio create person/contact records.
+            if crm_type == "salesforce":
+                new_object = "lead"
+            elif crm_type == "attio":
+                new_object = "person"
+            else:
+                new_object = "contact"
             _store_row_crm_id(workbook_id, lead_id, crm_type,
                               ext_id, str(new_id), new_object)
         return {
