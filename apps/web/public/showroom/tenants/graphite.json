@@ -14,8 +14,8 @@
   "status": "Открыто до 22:00",
   "rating": "4.9",
   "reviewsLabel": "187 отзывов",
-  "accent": "#C9FF3D",
-  "accentSecondary": "#83FF74",
+  "accent": "#4E8CFF",
+  "accentSecondary": "#2D68D8",
   "themeColor": "#08090B",
   "nearestLabel": "Сегодня",
   "nearestSlot": "19:00",
@@ -23,7 +23,7 @@
   "busySlots": [
     "13:00"
   ],
-  "hero": "https://images.unsplash.com/photo-1607860108855-64acf2078ed9?auto=format&fit=crop&w=1400&q=88",
+  "hero": "./assets/automotive-reference-hero.svg",
   "about": "Студия ухода за автомобилем: безопасная мойка, полировка, защитные покрытия и химчистка салона.",
   "routeNote": "12 минут от Москва-Сити",
   "galleryLabel": "последние проекты",
@@ -108,5 +108,10 @@
       "description": "Глубокая чистка текстиля, кожи и труднодоступных зон.",
       "image": "https://images.unsplash.com/photo-1507136566006-cfc505b114fc?auto=format&fit=crop&w=800&q=82"
     }
-  ]
+  ],
+  "appDescription": "Детейлинг, который возвращает кузову глубину, а салону — чистоту",
+  "bookingTitle": "Свежий вид для вашего авто",
+  "bookingCopy": "Выберите услугу и удобное время — остальное возьмём на себя",
+  "baysInWork": 3,
+  "priceFrom": 3500
 }
