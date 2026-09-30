@@ -16,6 +16,11 @@ on:
       - "apps/api/services/leadgen/enrichment/providers/jobspy_signals.py"
       - "apps/api/services/workbook/formula_column.py"
       - "tests/test_automation_opportunity.py"
+      - "apps/api/services/leadgen/twogis.py"
+      - "scripts/2gis_to_opengtm.py"
+      - "tests/test_2gis_bridge.py"
+      - ".github/workflows/2gis-quick.yml"
+      - ".github/workflows/2gis-leads.yml"
       - "tests/test_template_gallery.py"
       - "apps/api/services/queue_service.py"
       - "tests/test_queue_load.py"
@@ -32,7 +37,7 @@ jobs:
           python -m pip install --upgrade uv
           uv sync --dev
       - name: Run Opportunity Hunter contract tests
-        run: uv run pytest -q tests/test_attio_crm.py tests/test_automation_opportunity.py tests/test_template_gallery.py tests/test_queue_load.py
+        run: uv run pytest -q tests/test_attio_crm.py tests/test_automation_opportunity.py tests/test_2gis_bridge.py tests/test_template_gallery.py tests/test_queue_load.py
 
       - name: Run full Python test suite
         run: uv run pytest -q
