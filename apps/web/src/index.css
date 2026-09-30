@@ -1,0 +1,682 @@
+@import "tailwindcss" source(".");
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource/inter/latin-400.css";
+@import "@fontsource/inter/latin-500.css";
+@import "@fontsource/inter/latin-600.css";
+@import "twenty-ui/theme-light.css";
+@import "twenty-ui/theme-dark.css";
+@import "./design-system/theme/tokens.css";
+@import "./design-system/theme/motion.css";
+
+/* Keep utility detection independent of the build command's working directory. */
+@source "../index.html";
+
+@custom-variant dark (&:is(.dark *));
+
+/* Tailwind's text scale on the macOS HIG ramp, with SF-style optical tracking
+ * (tighter as size grows): xs 12 callout · sm 13 body · base 15 title3 ·
+ * lg 17 title2 · xl 22 title1 · 2xl 26 large title. */
+@theme {
+    --text-xs: 12px;
+    --text-xs--line-height: 16px;
+    --text-xs--letter-spacing: 0;
+    --text-sm: 13px;
+    --text-sm--line-height: 18px;
+    --text-sm--letter-spacing: -0.006em;
+    --text-base: 15px;
+    --text-base--line-height: 20px;
+    --text-base--letter-spacing: -0.014em;
+    --text-lg: 17px;
+    --text-lg--line-height: 22px;
+    --text-lg--letter-spacing: -0.022em;
+    --text-xl: 22px;
+    --text-xl--line-height: 28px;
+    --text-xl--letter-spacing: -0.02em;
+    --text-2xl: 26px;
+    --text-2xl--line-height: 32px;
+    --text-2xl--letter-spacing: -0.022em;
+    --font-mono: var(--gtm-font-mono);
+}
+
+@theme inline {
+    --font-heading: var(--gtm-font-display);
+    --font-sans: var(--gtm-font-sans);
+    --color-sidebar-ring: var(--sidebar-ring);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar: var(--sidebar);
+    --color-chart-5: var(--chart-5);
+    --color-chart-4: var(--chart-4);
+    --color-chart-3: var(--chart-3);
+    --color-chart-2: var(--chart-2);
+    --color-chart-1: var(--chart-1);
+    --color-ring: var(--ring);
+    --color-input: var(--input);
+    --color-border: var(--border);
+    --color-destructive: var(--destructive);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-accent: var(--accent);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-muted: var(--muted);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-secondary: var(--secondary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-primary: var(--primary);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-popover: var(--popover);
+    --color-card-foreground: var(--card-foreground);
+    --color-card: var(--card);
+    --color-foreground: var(--foreground);
+    --color-background: var(--background);
+    --radius-sm: calc(var(--radius) * 0.6);
+    --radius-md: calc(var(--radius) * 0.8);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) * 1.4);
+    --radius-2xl: calc(var(--radius) * 1.8);
+    --radius-3xl: calc(var(--radius) * 2.2);
+    --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-size: var(--t-font-size-md);
+    line-height: var(--gtm-line-height-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: "cv11", "ss01";
+    text-rendering: optimizeLegibility;
+  }
+  html {
+    @apply font-sans;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--gtm-font-display);
+    line-height: var(--gtm-line-height-tight);
+  }
+  /* Icons: SF Symbols-like weight and color for every Lucide icon. */
+  svg.lucide {
+    stroke-width: var(--gtm-icon-stroke);
+  }
+  /* Numbers in data line up, as in macOS tables. */
+  table, [role="grid"], [data-slot="table"], .tabular-data {
+    font-variant-numeric: tabular-nums;
+  }
+  ::selection {
+    background: var(--gtm-selection);
+  }
+  /* Keyboard-navigable items (j/k, Space for Quick Look) show the focus ring. */
+  [data-nav-item]:focus-visible {
+    outline: 2px solid var(--gtm-focus-ring);
+    outline-offset: -2px;
+    border-radius: var(--t-border-radius-sm);
+  }
+  :focus-visible {
+    outline: 2px solid var(--gtm-focus-ring);
+    outline-offset: 1px;
+  }
+  /* Native selects (workspace and theme switchers) match token controls;
+   * utility classes on a select still override these base styles. */
+  select {
+    height: var(--gtm-control-md);
+    padding: 0 var(--gtm-space-2);
+    border: 0;
+    border-radius: var(--t-border-radius-sm);
+    background-color: var(--gtm-control-bezel);
+    box-shadow: var(--gtm-control-shadow);
+    color: var(--t-font-color-primary);
+    font-size: var(--t-font-size-md);
+  }
+  select:hover {
+    background-color: var(--t-background-transparent-lighter);
+  }
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--t-font-color-tertiary);
+  }
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  [data-sidebar="menu-button"],
+  [data-sidebar="menu-button"]::after,
+  [data-slot="sidebar-gap"],
+  [data-slot="sidebar-container"] {
+    transition-duration: 0.01ms !important;
+  }
+
+  [data-sidebar="menu-button"]:hover,
+  [data-sidebar="menu-button"]:active {
+    transform: none !important;
+  }
+}
+
+/* ── macOS materials: translucent, blurred chrome (vibrancy) ── */
+@layer utilities {
+  .gtm-material-sidebar {
+    background-color: var(--gtm-material-sidebar);
+    backdrop-filter: var(--gtm-material-blur);
+    -webkit-backdrop-filter: var(--gtm-material-blur);
+  }
+  .gtm-material-toolbar {
+    background-color: var(--gtm-material-toolbar);
+    backdrop-filter: var(--gtm-material-blur);
+    -webkit-backdrop-filter: var(--gtm-material-blur);
+  }
+  .gtm-material-menu {
+    background-color: var(--gtm-material-menu);
+    backdrop-filter: var(--gtm-material-blur);
+    -webkit-backdrop-filter: var(--gtm-material-blur);
+  }
+}
+
+/* ── Text emphasis steps (token-backed in both themes) ── */
+@layer utilities {
+  .text-dim-1 { color: var(--t-font-color-primary); }
+  .text-dim-2 { color: var(--t-font-color-secondary); }
+  .text-dim-3 { color: var(--t-font-color-tertiary); }
+  .text-dim-4 { color: var(--t-font-color-light); }
+}
+
+/* ── Scrollbars: thin, token-colored ── */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--t-border-color-strong);
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--t-font-color-light);
+}
+
+/* Theme changes crossfade via View Transitions (public/theme.js, motion.css);
+ * controls declare their own short transitions. No global "*" transition. */
+
+/*
+ * ══════════════════════════════════════════════════════════════════════
+ *  SPRINT A — "FEEL PREMIUM" TABLE POLISH
+ *  Zebra striping, row hover, cell flash, row stagger, column progress
+ * ══════════════════════════════════════════════════════════════════════
+ */
+
+/* ── Zebra striping and row hover — transparent token tints ── */
+[data-slot="table-body"] tr:nth-child(even) td,
+tbody tr:nth-child(even) td {
+  background-color: var(--t-background-transparent-lighter);
+}
+[data-slot="table-body"] tr:hover td,
+tbody tr:hover td {
+  background-color: var(--t-background-transparent-light) !important;
+}
+
+/* ── Cell flash — fires when enrichment data arrives ── */
+@keyframes cell-flash-dark {
+  0%   { background-color: oklch(0.25 0.12 160); }
+  100% { background-color: transparent; }
+}
+@keyframes cell-flash-light {
+  0%   { background-color: oklch(0.88 0.10 160); }
+  100% { background-color: transparent; }
+}
+.cell-updated {
+  animation: cell-flash-dark 1.4s ease-out;
+}
+:root:not(.dark) .cell-updated {
+  animation: cell-flash-light 1.4s ease-out;
+}
+
+/* ── Staggered row fade-in — rows appear sequentially ── */
+@keyframes row-fade-in {
+  from { opacity: 0; transform: translateY(3px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.row-stagger {
+  animation: row-fade-in 0.25s ease-out both;
+}
+.row-stagger:nth-child(1)  { animation-delay: 0ms; }
+.row-stagger:nth-child(2)  { animation-delay: 15ms; }
+.row-stagger:nth-child(3)  { animation-delay: 30ms; }
+.row-stagger:nth-child(4)  { animation-delay: 45ms; }
+.row-stagger:nth-child(5)  { animation-delay: 60ms; }
+.row-stagger:nth-child(6)  { animation-delay: 75ms; }
+.row-stagger:nth-child(7)  { animation-delay: 90ms; }
+.row-stagger:nth-child(8)  { animation-delay: 105ms; }
+.row-stagger:nth-child(9)  { animation-delay: 120ms; }
+.row-stagger:nth-child(10) { animation-delay: 135ms; }
+.row-stagger:nth-child(n+11) { animation-delay: 150ms; }
+
+/* ── Column progress bar — thin bar under enrichment headers ── */
+.col-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: oklch(0.16 0 0);
+  overflow: hidden;
+}
+:root:not(.dark) .col-progress {
+  background: oklch(0.92 0.006 85);
+}
+.col-progress-fill {
+  height: 100%;
+  border-radius: 1px;
+  transition: width 0.4s ease;
+  background: oklch(0.60 0.18 250);
+}
+:root:not(.dark) .col-progress-fill {
+  background: oklch(0.50 0.16 250);
+}
+
+/* ── Running column header glow ── */
+@keyframes col-pulse {
+  0%, 100% { opacity: 0.4; }
+  50%      { opacity: 1; }
+}
+.col-running {
+  animation: col-pulse 2s ease-in-out infinite;
+}
+
+/* ── Button shimmer — loading state gradient sweep ── */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.btn-shimmer {
+  background: linear-gradient(90deg, transparent 30%, oklch(1 0 0 / 0.08) 50%, transparent 70%);
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
+
+/* ── Skeleton shimmer for table cells ── */
+@keyframes skeleton-wave {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.skeleton-cell {
+  background: linear-gradient(90deg, oklch(0.14 0 0) 25%, oklch(0.18 0 0) 50%, oklch(0.14 0 0) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-wave 1.8s ease-in-out infinite;
+  border-radius: 3px;
+}
+:root:not(.dark) .skeleton-cell {
+  background: linear-gradient(90deg, oklch(0.93 0.005 85) 25%, oklch(0.90 0.008 85) 50%, oklch(0.93 0.005 85) 75%);
+  background-size: 200% 100%;
+}
+
+/*
+ * ══════════════════════════════════════════════════════════════════════
+ *  ACTIVITY DRAWER — Bottom-up collapsible panel for enrichment logs
+ * ══════════════════════════════════════════════════════════════════════
+ */
+
+/* ── Drawer container ── */
+.activity-drawer {
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid var(--border);
+  background: var(--card);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  animation: drawer-slide-up 0.25s ease-out;
+}
+
+@keyframes drawer-slide-up {
+  from { opacity: 0; max-height: 0; }
+  to   { opacity: 1; max-height: 400px; }
+}
+
+/* ── Resize handle ── */
+.activity-drawer-resize {
+  height: 6px;
+  cursor: ns-resize;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.activity-drawer:hover .activity-drawer-resize {
+  opacity: 1;
+}
+.activity-drawer-resize-bar {
+  width: 36px;
+  height: 3px;
+  border-radius: 3px;
+  background: var(--muted-foreground);
+  opacity: 0.3;
+}
+
+/* ── Tab bar ── */
+.activity-drawer-tabs {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  height: 32px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  gap: 8px;
+}
+.activity-drawer-tab-list {
+  display: flex;
+  gap: 2px;
+}
+.activity-drawer-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--muted-foreground);
+  border-radius: 4px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.activity-drawer-tab:hover {
+  background: var(--accent);
+  color: var(--foreground);
+}
+.activity-drawer-tab.active {
+  background: var(--accent);
+  color: var(--foreground);
+  font-weight: 600;
+}
+.activity-drawer-badge-error {
+  font-size: 9px;
+  padding: 1px 5px;
+  border-radius: 8px;
+  background: oklch(0.55 0.22 27 / 0.15);
+  color: oklch(0.65 0.20 25);
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* ── Tab actions area ── */
+.activity-drawer-tab-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.activity-drawer-filter {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  background: var(--muted);
+  border-radius: 4px;
+  border: 1px solid var(--border);
+}
+.activity-drawer-filter-input {
+  font-size: 11px;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--foreground);
+  width: 120px;
+}
+.activity-drawer-filter-input::placeholder {
+  color: var(--muted-foreground);
+}
+.activity-drawer-clear,
+.activity-drawer-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  border: none;
+  background: none;
+  color: var(--muted-foreground);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.activity-drawer-clear:hover,
+.activity-drawer-close:hover {
+  background: var(--accent);
+  color: var(--foreground);
+}
+
+/* ── Content area ── */
+.activity-drawer-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+/* ── Empty state ── */
+.activity-drawer-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--muted-foreground);
+  opacity: 0.6;
+}
+
+/* ── Live feed ── */
+.activity-drawer-feed {
+  padding: 4px 8px;
+}
+
+.activity-event {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 8px;
+  font-size: 11px;
+  border-radius: 4px;
+  transition: background 0.15s;
+  animation: event-slide-in 0.2s ease-out;
+}
+.activity-event:hover {
+  background: var(--accent);
+}
+
+@keyframes event-slide-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.activity-event-time {
+  font-family: var(--font-mono, monospace);
+  font-size: 9px;
+  color: var(--muted-foreground);
+  opacity: 0.5;
+  width: 60px;
+  flex-shrink: 0;
+}
+.activity-event-icon {
+  flex-shrink: 0;
+  width: 14px;
+  display: flex;
+  align-items: center;
+}
+.activity-event-company {
+  font-weight: 500;
+  color: var(--foreground);
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.activity-event-column {
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 3px;
+  background: var(--muted);
+  color: var(--muted-foreground);
+  flex-shrink: 0;
+}
+.activity-event-provider {
+  font-size: 9px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+  color: var(--muted-foreground);
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+.activity-event-value {
+  font-size: 10px;
+  color: oklch(0.70 0.14 160);
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
+}
+.activity-event-error {
+  font-size: 10px;
+  color: oklch(0.65 0.20 25);
+  max-width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Error row highlight */
+.activity-event.enrich_error {
+  background: oklch(0.55 0.22 27 / 0.06);
+}
+.activity-event.enrich_error:hover {
+  background: oklch(0.55 0.22 27 / 0.10);
+}
+
+/* ── Columns tab ── */
+.activity-drawer-columns {
+  padding: 8px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 6px;
+}
+.activity-col-card {
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--background);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.activity-col-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.activity-col-name {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--foreground);
+}
+.activity-col-provider {
+  font-size: 9px;
+  color: var(--muted-foreground);
+  opacity: 0.6;
+}
+.activity-col-bar {
+  height: 4px;
+  border-radius: 4px;
+  background: var(--muted);
+  overflow: hidden;
+  position: relative;
+}
+.activity-col-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: oklch(0.60 0.18 160);
+  transition: width 0.4s ease;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.activity-col-bar-error {
+  height: 100%;
+  border-radius: 4px;
+  background: oklch(0.55 0.20 25);
+  transition: width 0.4s ease;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.activity-col-stats {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 10px;
+}
+.activity-col-stats span {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+/* ── Trigger button (inline in status bar) ── */
+.activity-drawer-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 8px;
+  font-size: 11px;
+  color: var(--muted-foreground);
+  border: none;
+  background: none;
+  cursor: pointer;
+  transition: all 0.15s;
+  border-left: 1px solid var(--border);
+  height: 100%;
+}
+.activity-drawer-trigger:hover {
+  color: var(--foreground);
+  background: var(--accent);
+}
+
+/* ── Light theme adjustments ── */
+:root:not(.dark) .activity-event-value {
+  color: oklch(0.40 0.14 160);
+}
+:root:not(.dark) .activity-event-error {
+  color: oklch(0.45 0.20 25);
+}
+:root:not(.dark) .activity-col-bar-fill {
+  background: oklch(0.50 0.18 160);
+}
+:root:not(.dark) .activity-col-bar-error {
+  background: oklch(0.50 0.20 25);
+}
+:root:not(.dark) .activity-drawer-badge-error {
+  background: oklch(0.55 0.22 27 / 0.10);
+  color: oklch(0.50 0.22 25);
+}

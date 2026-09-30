@@ -1,0 +1,21 @@
+{
+    "name": "@opengtm/chrome-extension",
+    "version": "0.1.0",
+    "private": true,
+    "description": "OpenGTM Capture — Chrome MV3 extension that extracts structured data from the current page and pushes it into an OpenGTM workbook.",
+    "license": "AGPL-3.0-only",
+    "scripts": {
+        "build": "bun run scripts/build.ts",
+        "dev": "echo '@opengtm/chrome-extension — no dev server; run build and load dist/ unpacked'",
+        "typecheck": "tsc --noEmit",
+        "lint": "tsc --noEmit",
+        "test": "bun test",
+        "zip": "bun run build && cd dist && zip -r ../opengtm-chrome-extension.zip ."
+    },
+    "devDependencies": {
+        "@types/bun": "^1.1.0",
+        "@types/chrome": "^0.0.280",
+        "happy-dom": "^15.11.7",
+        "typescript": "^5.0.0"
+    }
+}

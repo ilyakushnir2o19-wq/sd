@@ -1,0 +1,47 @@
+{
+  "name": "n8n-nodes-opengtm",
+  "version": "0.1.0",
+  "description": "n8n community node for OpenGTM — open-source go-to-market agents. Source leads, enrich companies, verify emails, and activate workflows.",
+  "keywords": [
+    "n8n-community-node-package",
+    "lead-generation",
+    "b2b",
+    "enrichment",
+    "sales",
+    "gtm",
+    "opengtm"
+  ],
+  "license": "MIT",
+  "author": {
+    "name": "OpenGTM",
+    "url": "https://github.com/debpalash"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/debpalash/opengtm.git"
+  },
+  "main": "index.js",
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "credentials": [
+      "dist/credentials/YupchaApi.credentials.js"
+    ],
+    "nodes": [
+      "dist/nodes/Yupcha/Yupcha.node.js"
+    ]
+  },
+  "scripts": {
+    "dev": "echo 'n8n-nodes-opengtm — no dev server'",
+    "build": "tsc && mkdir -p dist/nodes/Yupcha && cp nodes/Yupcha/opengtm.svg dist/nodes/Yupcha/opengtm.svg",
+    "lint": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "files": [
+    "dist"
+  ],
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "n8n-workflow": "*",
+    "typescript": "^5.0.0"
+  }
+}

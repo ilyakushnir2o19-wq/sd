@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "opengtm": {
+      "command": "docker",
+      "args": [
+        "compose", "-f", "/absolute/path/to/opengtm/docker-compose.yml",
+        "exec", "-T", "-e", "OPENGTM_MCP_TOKEN",
+        "api", "python", "-m", "apps.mcp.server"
+      ],
+      "env": {"OPENGTM_MCP_TOKEN": "ycp_..."}
+    }
+  }
+}

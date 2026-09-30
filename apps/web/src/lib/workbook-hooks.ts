@@ -1,0 +1,449 @@
+/**
+ * Workbook React Query hooks — Hybrid model.
+ *
+ * Rows are leads. WebSocket updates enrichment overlays.
+ */
+
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
+import { useEffect, useRef, useCallback, useState } from "react"
+import {
+  fetchWorkbooks, fetchWorkbook, createWorkbook, updateWorkbook,
+  deleteWorkbook, updateLeadField, updateWorkbookRow, bulkUpdateWorkbookRows, importLeads, deleteLeads,
+  deleteWorkbookRows, deleteMatchingWorkbookRows,
+  runWorkbook, stopWorkbook, runWorkbookCell,
+  fetchWorkbookViews, createWorkbookView, updateWorkbookView, deleteWorkbookView,
+  fetchProviders, fetchFilterOptions, createWorkbookSocket,
+  fetchConnectorRuns,
+  saveWorkbookColumnWidth,
+  saveWorkbookColumnOrder,
+  saveWorkbookColumnSettings,
+  addColumn,
+  deleteColumn,
+  type ColumnConfig,
+  type Workbook, type WorkbookLeadRow, type ViewConfig,
+} from "./workbook-api"
+
+// ── Query Keys ───────────────────────────────────────────────────────────
+
+export const workbookKeys = {
+  all: ["workbooks"] as const,
+  list: () => [...workbookKeys.all, "list"] as const,
+  detail: (id: string) => [...workbookKeys.all, "detail", id] as const,
+  connectorRuns: (id: string) => [...workbookKeys.all, "connector-runs", id] as const,
+  views: (id: string) => [...workbookKeys.all, "views", id] as const,
+  providers: () => [...workbookKeys.all, "providers"] as const,
+  filterOptions: () => [...workbookKeys.all, "filter-options"] as const,
+}
+
+// ── Workbook List ────────────────────────────────────────────────────────
+
+export function useWorkbooks() {
+  return useQuery({
+    queryKey: workbookKeys.list(),
+    queryFn: fetchWorkbooks,
+  })
+}
+
+// ── Workbook Detail + Leads ──────────────────────────────────────────────
+
+export function useWorkbook(id: string, pageSize = 1000, page = 1, viewId?: string | null, search = "", cursorMode = false, cursor?: string | null) {
+  return useQuery({
+    queryKey: [...workbookKeys.detail(id), page, pageSize, viewId ?? "", search, cursorMode, cursor ?? ""],
+    queryFn: () => fetchWorkbook(id, page, pageSize, viewId, search, cursorMode, cursor),
+    placeholderData: previous => previous,
+    enabled: !!id,
+    // Don't retry client errors (404 not-found / 403 no-access won't resolve on
+    // their own); only retry transient/server errors once.
+    retry: (count, err) => {
+      const status = (err as { status?: number })?.status
+      if (status && status >= 400 && status < 500) return false
+      return count < 1
+    },
+    // Redis-backed WebSocket updates are optional in local/self-hosted setups.
+    // Poll while a run is active so cells and final status still advance when
+    // the socket is connected in echo-only fallback mode.
+    refetchInterval: query => {
+      const current = query.state.data as { workbook?: { status?: string } } | undefined
+      return current?.workbook?.status === "running" ? 1500 : false
+    },
+  })
+}
+
+/** Source-import history. Poll only while a durable connector is active. */
+export function useConnectorRuns(workbookId: string | undefined) {
+  return useQuery({
+    queryKey: workbookKeys.connectorRuns(workbookId || ""),
+    queryFn: () => fetchConnectorRuns(workbookId!),
+    enabled: !!workbookId,
+    refetchInterval: query => {
+      const runs = (query.state.data as { runs?: Array<{ status: string }> } | undefined)?.runs
+      return runs?.some(run => run.status === "pending" || run.status === "running" || run.status === "retrying") ? 1000 : false
+    },
+  })
+}
+
+// ── Filter Options (for workbook creation) ───────────────────────────────
+
+export function useFilterOptions() {
+  return useQuery({
+    queryKey: workbookKeys.filterOptions(),
+    queryFn: fetchFilterOptions,
+    staleTime: 60 * 1000,
+  })
+}
+
+// ── Mutations ────────────────────────────────────────────────────────────
+
+export function useCreateWorkbook() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: createWorkbook,
+    onSuccess: () => qc.invalidateQueries({ queryKey: workbookKeys.list() }),
+  })
+}
+
+export function useSaveWorkbookColumnOrder(workbookId: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    scope: { id: `workbook-layout:${workbookId}` },
+    mutationFn: ({ columnIds, expectedColumnIds }: { columnIds: string[]; expectedColumnIds: string[] }) =>
+      saveWorkbookColumnOrder(workbookId, columnIds, expectedColumnIds),
+    onSettled: () => qc.invalidateQueries({ queryKey: workbookKeys.detail(workbookId) }),
+  })
+}
+
+export function useSaveWorkbookColumnWidth(workbookId: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    scope: { id: `workbook-layout:${workbookId}` },
+    mutationFn: ({ columnId, width }: { columnId: string; width: number }) => saveWorkbookColumnWidth(workbookId, columnId, width),
+    onSuccess: result => {
+      qc.setQueriesData({ queryKey: workbookKeys.detail(workbookId) }, (old: any) => {
+        if (!old?.workbook) return old
+        return { ...old, workbook: { ...old.workbook, columns_config: old.workbook.columns_config.map((column: any) => column.id === result.column_id ? { ...column, width: result.width } : column) } }
+      })
+    },
+  })
+}
+
+export function useSaveWorkbookColumnSettings(workbookId: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    scope: { id: `workbook-layout:${workbookId}` },
+    mutationFn: ({ columnId, changes, expected }: { columnId: string; changes: Record<string, unknown>; expected: Record<string, unknown> }) =>
+      saveWorkbookColumnSettings(workbookId, columnId, changes, expected),
+    onSuccess: result => {
+      qc.setQueriesData({ queryKey: workbookKeys.detail(workbookId) }, (old: any) => {
+        if (!old?.workbook) return old
+        return { ...old, workbook: { ...old.workbook, columns_config: old.workbook.columns_config.map((column: any) =>
+          column.id === result.column_id ? { ...column, ...result.changes } : column) } }
+      })
+    },
+  })
+}
+
+export function useAddWorkbookColumn(workbookId: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    scope: { id: `workbook-layout:${workbookId}` },
+    mutationFn: (column: Partial<ColumnConfig>) => addColumn(workbookId, column),
+    onSuccess: result => {
+      qc.setQueriesData({ queryKey: workbookKeys.detail(workbookId) }, (old: any) =>
+        old?.workbook ? { ...old, workbook: { ...old.workbook, columns_config: result.columns_config } } : old)
+    },
+  })
+}
+
+export function useDeleteWorkbookColumn(workbookId: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    scope: { id: `workbook-layout:${workbookId}` },
+    mutationFn: (column: ColumnConfig) => deleteColumn(workbookId, column.id, column),
+    onSuccess: result => {
+      qc.setQueriesData({ queryKey: workbookKeys.detail(workbookId) }, (old: any) =>
+        old?.workbook ? { ...old, workbook: { ...old.workbook, columns_config: result.columns_config } } : old)
+    },
+  })
+}
+
+export function useUpdateWorkbook() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: ({ id, ...data }: Partial<Workbook> & { id: string }) => updateWorkbook(id, data),
+    onSuccess: (_, vars) => {
+      qc.invalidateQueries({ queryKey: workbookKeys.detail(vars.id) })
+      qc.invalidateQueries({ queryKey: workbookKeys.list() })
+    },
+  })
+}
+
+export function useDeleteWorkbook() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: deleteWorkbook,
+    onSuccess: () => qc.invalidateQueries({ queryKey: workbookKeys.list() }),
+  })
+}
+
+/** Update a Lead field from the workbook editor */
+export function useUpdateLeadField(workbookId: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: ({ leadId, fields }: { leadId: number; fields: Record<string, any> }) =>
+      updateLeadField(workbookId, leadId, fields),
+    onSuccess: () => qc.invalidateQueries({ queryKey: workbookKeys.detail(workbookId) }),
+  })
+}
+
+/** Update a v2 workbook row without treating its id as a lead id. */
+export function useUpdateWorkbookRow(workbookId: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: ({ rowId, fields }: { rowId: number; fields: Record<string, any> }) =>
+      updateWorkbookRow(workbookId, rowId, fields),
+    onSuccess: () => qc.invalidateQueries({ queryKey: workbookKeys.detail(workbookId) }),
+  })
+}
+
+export function useBulkUpdateWorkbookRows(workbookId: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (updates: Array<{ row_id: number; fields: Record<string, any> }>) =>
+      bulkUpdateWorkbookRows(workbookId, updates),
+    onSuccess: () => qc.invalidateQueries({ queryKey: workbookKeys.detail(workbookId) }),
+  })
+}
+
+/** Import mapped CSV rows into the self-contained workbook. */
+export function useImportLeads(workbookId: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (options: import("./workbook-api").CsvImportOptions) => importLeads(workbookId, options),
+    onSuccess: () => qc.invalidateQueries({ queryKey: workbookKeys.detail(workbookId) }),
+  })
+}
+
+export function useRunWorkbook(workbookId: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (opts?: import("./workbook-api").WorkbookRunOptions) => runWorkbook(workbookId, opts),
+    onSuccess: () => qc.invalidateQueries({ queryKey: workbookKeys.detail(workbookId) }),
+  })
+}
+
+/** (Re-)run a single cell synchronously; force bypasses success-skip gates. */
+export function useRunCell(workbookId: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: ({ rowId, colId, force }: { rowId: number; colId: string; force?: boolean }) =>
+      runWorkbookCell(workbookId, rowId, colId, force ?? false),
+    onSuccess: () => qc.invalidateQueries({ queryKey: workbookKeys.detail(workbookId) }),
+  })
+}
+
+// ── Saved Views ──────────────────────────────────────────────────────────
+
+export function useWorkbookViews(workbookId: string) {
+  return useQuery({
+    queryKey: workbookKeys.views(workbookId),
+    queryFn: () => fetchWorkbookViews(workbookId),
+    enabled: !!workbookId,
+  })
+}
+
+export function useCreateView(workbookId: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (body: { name: string; config?: Partial<ViewConfig> }) =>
+      createWorkbookView(workbookId, body),
+    onSuccess: () => qc.invalidateQueries({ queryKey: workbookKeys.views(workbookId) }),
+  })
+}
+
+export function useUpdateView(workbookId: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: ({ viewId, ...body }: { viewId: string; name?: string; config?: ViewConfig }) =>
+      updateWorkbookView(workbookId, viewId, body),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: workbookKeys.views(workbookId) })
+      qc.invalidateQueries({ queryKey: workbookKeys.detail(workbookId) })
+    },
+  })
+}
+
+export function useDeleteView(workbookId: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (viewId: string) => deleteWorkbookView(workbookId, viewId),
+    onSuccess: () => qc.invalidateQueries({ queryKey: workbookKeys.views(workbookId) }),
+  })
+}
+
+export function useStopWorkbook(workbookId: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: () => stopWorkbook(workbookId),
+    onSuccess: () => qc.invalidateQueries({ queryKey: workbookKeys.detail(workbookId) }),
+  })
+}
+
+export function useDeleteLeads(workbookId: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (leadIds: number[]) => deleteLeads(leadIds),
+    onSuccess: () => qc.invalidateQueries({ queryKey: workbookKeys.detail(workbookId) }),
+  })
+}
+
+export function useDeleteWorkbookRows(workbookId: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: async ({ rowIds, leadIds }: { rowIds: number[]; leadIds: number[] }) => {
+      // Workbook deletion must never silently delete records from the lead store.
+      if (leadIds.length) throw new Error("Migrate this legacy workbook before deleting its rows. Original leads are unchanged.")
+      return rowIds.length ? deleteWorkbookRows(workbookId, rowIds) : { deleted: 0 }
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: workbookKeys.detail(workbookId) }),
+  })
+}
+
+export function useDeleteMatchingWorkbookRows(workbookId: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (options: { expected_count: number; confirmation: string; view_id?: string; search?: string }) =>
+      deleteMatchingWorkbookRows(workbookId, options),
+    onSuccess: () => qc.invalidateQueries({ queryKey: workbookKeys.detail(workbookId) }),
+  })
+}
+
+// ── Providers ────────────────────────────────────────────────────────────
+
+export function useProviders() {
+  return useQuery({
+    queryKey: workbookKeys.providers(),
+    queryFn: fetchProviders,
+    staleTime: 60 * 1000,
+  })
+}
+
+// ── WebSocket Hook ───────────────────────────────────────────────────────
+
+export function useWorkbookSocket(workbookId: string | undefined) {
+  const qc = useQueryClient()
+  const wsRef = useRef<WebSocket | null>(null)
+  const [connected, setConnected] = useState(false)
+
+  // Batch cell updates: accumulate in a ref and flush once per animation frame
+  const pendingUpdates = useRef<Map<string, any>>(new Map())
+  const rafRef = useRef<number | null>(null)
+
+  const flushUpdates = useCallback(() => {
+    if (!workbookId || pendingUpdates.current.size === 0) return
+
+    // Group by lead_id
+    const byLead = new Map<string, any[]>()
+    for (const [, msg] of pendingUpdates.current) {
+      const lid = String(msg.rowId ?? msg.leadId)
+      if (!byLead.has(lid)) byLead.set(lid, [])
+      byLead.get(lid)!.push(msg)
+    }
+    pendingUpdates.current.clear()
+    rafRef.current = null
+
+    qc.setQueriesData({ queryKey: workbookKeys.detail(workbookId) }, (old: any) => {
+      if (!old?.rows) return old
+      return {
+        ...old,
+        rows: old.rows.map((row: WorkbookLeadRow) => {
+          const updates = byLead.get(String(row.row_id ?? row.lead_id))
+          if (!updates) return row // same reference — no re-render
+          let newLead = row.lead
+          let newEnrichments = { ...row.enrichments }
+          for (const u of updates) {
+            if (u.leadField) {
+              newLead = { ...newLead, [u.leadField]: u.value }
+            }
+            newEnrichments[u.colId] = {
+              value: u.value, status: u.status,
+              provider: u.provider, error: u.error,
+              research: u.research ?? null,
+              provenance: u.provenance ?? null,
+              verify_status: u.verify_status ?? null,
+            }
+          }
+          return { ...row, lead: newLead, enrichments: newEnrichments }
+        }),
+      }
+    })
+  }, [workbookId, qc])
+
+  useEffect(() => {
+    if (!workbookId) return
+
+    const ws = createWorkbookSocket(workbookId)
+    wsRef.current = ws
+
+    ws.onopen = () => {
+      setConnected(true)
+      const ping = setInterval(() => {
+        if (ws.readyState === WebSocket.OPEN) {
+          ws.send(JSON.stringify({ type: "ping" }))
+        }
+      }, 30000)
+      ws.addEventListener("close", () => clearInterval(ping))
+    }
+
+    ws.onmessage = (event) => {
+      try {
+        const msg = JSON.parse(event.data)
+
+        if (msg.type === "cell_update") {
+          // Accumulate in batch — don't trigger React re-render yet
+          pendingUpdates.current.set(`${msg.rowId ?? msg.leadId}:${msg.colId}`, msg)
+
+          // Schedule flush on next animation frame (coalesces all updates in this frame)
+          if (!rafRef.current) {
+            rafRef.current = requestAnimationFrame(flushUpdates)
+          }
+        }
+
+        if (msg.type === "workbook_status") {
+          qc.setQueriesData({ queryKey: workbookKeys.detail(workbookId) }, (old: any) => {
+            if (!old) return old
+            return { ...old, workbook: { ...old.workbook, status: msg.status } }
+          })
+        }
+
+
+        if (msg.type === "source_page") {
+          // A source page commits rows and its cursor atomically. Refetch both
+          // views so the table and progress indicator advance together.
+          qc.invalidateQueries({ queryKey: workbookKeys.detail(workbookId) })
+          qc.invalidateQueries({ queryKey: workbookKeys.connectorRuns(workbookId) })
+          qc.invalidateQueries({ queryKey: workbookKeys.list() })
+        }
+      } catch {
+        // ignore bad messages
+      }
+    }
+
+    ws.onclose = () => setConnected(false)
+    ws.onerror = () => setConnected(false)
+
+    return () => {
+      ws.close()
+      wsRef.current = null
+      setConnected(false)
+      if (rafRef.current) cancelAnimationFrame(rafRef.current)
+    }
+  }, [workbookId, qc, flushUpdates])
+
+  const send = useCallback((msg: Record<string, any>) => {
+    if (wsRef.current?.readyState === WebSocket.OPEN) {
+      wsRef.current.send(JSON.stringify(msg))
+    }
+  }, [])
+
+  return { connected, send }
+}

@@ -1,0 +1,80 @@
+# ── Python ──────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.venv/
+*.mypy_cache/
+
+# ── Node ────────────────────────────────────
+node_modules/
+.turbo/
+apps/web/dist/
+
+# ── Lockfiles ───────────────────────────────
+# uv.lock and bun.lock ARE tracked (reproducible CI + Docker builds).
+bun.lockb
+package-lock.json
+
+# ── Data / DB ───────────────────────────────
+*.db
+*.db-journal
+data/downloads/
+data/workspaces/
+backups/
+# Lead exports / scraped snapshots: real prospect data, never commit.
+data/*.csv
+data/source_tests/
+data/pipeline_eval/
+# Runtime state written by services
+apps/api/services/leadgen/scrapers/data/br_import_checkpoint.json
+
+# ── HAR captures (large binary) ─────────────
+har/
+
+# ── Research repos (cloned references) ──────
+reference/research/
+/research/
+
+# ── Research AI context (regenerated) ───────
+# Keep these tracked — they're small text files
+# research-ai-context/
+
+# ── Research summaries (large) ──────────────
+reference/research-summaries/
+
+# ── Environment / Secrets ───────────────────
+.env
+.env.local
+.env.production
+.opengtm-initial-credentials
+
+# ── IDE ─────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# ── Debug / Temp ────────────────────────────
+*.debug.html
+ddg_output*.txt
+*.log
+apps/api/services/leadgen/data/leads.db-shm
+apps/api/services/leadgen/data/leads.db-wal
+# SQLite runtime artifacts (transient; never track)
+*.db-shm
+*.db-wal
+
+# ── Optional private add-ons (not part of the public repo) ──
+data_collector/
+packages/proxy-manager/
+
+# SearXNG local instance secret (use settings.yml.example as template)
+infra/searxng/settings.yml
+
+# Local data symlink + Go build artifacts
+apps/api/data
+apps/searxng-pool/searxng-pool

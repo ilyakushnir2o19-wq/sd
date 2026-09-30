@@ -1,0 +1,92 @@
+---
+title: Self-hosted lead sourcing and enrichment
+description: Source and enrich leads with provider waterfalls, cited AI research, and workbook spend limits. Install OpenGTM on your infrastructure with Docker Compose.
+template: splash
+tableOfContents: false
+---
+
+import { Icon } from '@astrojs/starlight/components';
+
+<section class="lp-hero">
+  <div class="lp-hero__copy">
+    <p class="lp-eyebrow"><span>OPEN SOURCE</span><span>SELF-HOSTED</span><span>AGPL-3.0</span></p>
+    <h2>Source leads.<br />Control the spend.</h2>
+    <p class="lp-lede">
+      OpenGTM is an open-source workspace for sourcing and enriching leads.
+      Run it on your infrastructure, use your provider keys, and review
+      estimated spend before each workbook run.
+    </p>
+    <div class="lp-actions">
+      <a class="lp-btn lp-btn--primary" href="#install">Install locally <span aria-hidden="true">↓</span></a>
+      <a class="lp-btn" href="#workflow">See how it works</a>
+      <a class="lp-btn lp-btn--quiet" href="https://github.com/debpalash/OpenGTM"><Icon name="github" />GitHub</a>
+    </div>
+    <p class="lp-hero__aside">Try the seeded demo without provider keys. No hosted account.</p>
+  </div>
+
+  <figure class="lp-product">
+    <img src="/chat-workspace.webp" width="1455" height="562" alt="OpenGTM chat workspace with sourcing, enrichment, and signal quick actions above the message composer" decoding="async" />
+    <figcaption><span>01 / THE WORKSPACE</span><span>Actual application · example workspace</span></figcaption>
+  </figure>
+</section>
+
+<section class="lp-section lp-setup" id="install">
+  <header class="lp-section__head">
+    <p class="lp-kicker">START HERE</p>
+    <h2>Install with Docker Compose.</h2>
+    <p>The installer creates admin credentials, secrets, and a writable data directory.</p>
+  </header>
+  <div class="lp-setup__grid">
+    <div class="lp-setup__path">
+      <p class="lp-setup__label"><span>01 / LAPTOP</span><span>Docker Compose · macOS / Linux</span></p>
+
+```bash wrap
+git clone https://github.com/debpalash/OpenGTM.git
+cd OpenGTM
+./scripts/install.sh
+```
+
+      <p>Open <code>localhost:3000</code>. Read the initial admin password from <code>.opengtm-initial-credentials</code>.</p>
+    </div>
+    <div class="lp-setup__path">
+      <p class="lp-setup__label"><span>02 / SERVER</span><span>Versioned image · private HTTP</span></p>
+
+```bash wrap
+git clone --branch v3.0.0 https://github.com/debpalash/OpenGTM.git
+cd OpenGTM
+./scripts/install.sh --no-start
+```
+
+      <p>Pin the image, bind port 3000 to loopback, and put a TLS proxy in front. <a href="/getting-started/quickstart/#server">Server install steps →</a></p>
+    </div>
+  </div>
+  <p class="lp-setup__foot">Docker Compose v2 · about 4 GB free RAM. <a href="/getting-started/quickstart/">Installation guide</a> · <a href="/self-hosting/production/">Production checklist</a> · <a href="/compare/clay-alternative/">OpenGTM vs. Clay</a></p>
+</section>
+
+<section class="lp-section lp-workflow" id="workflow">
+  <header class="lp-section__head">
+    <p class="lp-kicker">THE WORKFLOW</p>
+    <h2>Workbooks show each step.</h2>
+    <p>Source rows, enrich missing fields, keep citations next to research answers, then send qualified rows to your tools.</p>
+  </header>
+  <nav class="lp-capabilities" aria-label="OpenGTM workflow">
+    <a href="/guides/sourcing/"><span class="lp-capabilities__step">01</span><span><strong>Source companies and people</strong><small>Search by industry, geography, and keywords.</small></span><span class="lp-capabilities__arrow" aria-hidden="true">↗</span></a>
+    <a href="/concepts/waterfalls/"><span class="lp-capabilities__step">02</span><span><strong>Enrich missing fields</strong><small>Try providers in cost-aware order for each column.</small></span><span class="lp-capabilities__arrow" aria-hidden="true">↗</span></a>
+    <a href="/guides/research-and-agent-columns/"><span class="lp-capabilities__step">03</span><span><strong>Research with citations</strong><small>Keep fetched source URLs beside the answer.</small></span><span class="lp-capabilities__arrow" aria-hidden="true">↗</span></a>
+    <a href="/guides/outputs/"><span class="lp-capabilities__step">04</span><span><strong>Send qualified rows</strong><small>Push to a CRM, webhook, or email sequence.</small></span><span class="lp-capabilities__arrow" aria-hidden="true">↗</span></a>
+  </nav>
+</section>
+
+<section class="lp-section lp-control">
+  <header class="lp-section__head">
+    <p class="lp-kicker">OPERATE WITH CONTROL</p>
+    <h2>Control spend and trace results.</h2>
+    <p>Review an estimate before a run. A workbook budget stops paid calls before they exceed your ceiling.</p>
+  </header>
+  <dl class="lp-principles">
+    <div><dt>Evidence</dt><dd>Research citations link to pages fetched during the run.</dd></div>
+    <div><dt>Cost</dt><dd>Cell traces show provider attempts, latency, and cost.</dd></div>
+    <div><dt>Hosting</dt><dd>Your team operates the stack, backups, and upgrades.</dd></div>
+  </dl>
+  <div class="lp-close"><p>Try the seeded workbook.</p><a class="lp-btn lp-btn--primary" href="/getting-started/quickstart/">Open the install guide <span aria-hidden="true">↗</span></a></div>
+</section>
