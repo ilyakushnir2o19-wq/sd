@@ -326,6 +326,7 @@ def score_opportunity_evidence(value: Any) -> dict[str, Any]:
 
     physical_only = _truthy(payload.get("physical_only"))
     relationship_heavy = _truthy(payload.get("relationship_heavy"))
+    evidence_kill = _truthy(payload.get("evidence_kill") or payload.get("kill"))
     risk_value = payload.get("risk_level")
     if not risk_value:
         risk_field = payload.get("risk")
@@ -360,6 +361,8 @@ def score_opportunity_evidence(value: Any) -> dict[str, Any]:
 
     kill_reasons: list[str] = []
     review_reasons: list[str] = []
+    if evidence_kill:
+        kill_reasons.append("public_evidence_marked_kill")
     if not manual_tasks:
         kill_reasons.append("no_concrete_manual_task")
     if not source_urls:
