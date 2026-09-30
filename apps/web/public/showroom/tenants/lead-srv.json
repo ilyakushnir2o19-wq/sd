@@ -1,0 +1,56 @@
+{
+  "slug": "lead-srv",
+  "name": "SRV DETAILING",
+  "shortName": "SRV",
+  "category": "Детейлинг · Санкт-Петербург",
+  "city": "Санкт-Петербург",
+  "address": "Санкт-Петербург, ул. Симонова, 11",
+  "accent": "#5A8DE2",
+  "hero": "https://cdn4.telesco.pe/file/C42or_uYEoCh4OHurskt709bnOQ3NfDok_34ZBsNL4MSx1_jkkVCqXEM9uGBZPrR_GyM_1EwoQgzvYmzbp55GN4lp90-9eDsX15ctKhlEc_l1ChCH86JY3njStV_JJnmFNsz4jO4R7M0alOyk1f5y0yTv5g_vaSUMUsB_JibCqnk1PQsFo2z2LN1UsFA-XWr8Wk1WbenHXo_vq-lmOGqTMVsayfV4qxWmGE6EJk1U6Ir3gYNYw44-UReZNcnbHDz8uZuorX9hA0xX_ygW5wFXWKcBBXFOJy2XXYsZ7x4SACXiAVZy5BHMTvBz7R_Tjg1ikXbifBTpHPRDVZ2mmjkTw.jpg",
+  "appDescription": "Комплексный уход: химчистка, PPF, полировка, керамика, тонировка и шумоизоляция",
+  "metric2Value": "7",
+  "metric2Label": "направлений",
+  "priceLabel": "расчёт в чате",
+  "priceCaption": "@srv_roman",
+  "bookingTitle": "Запись по услуге в одном окне",
+  "bookingCopy": "Клиент выбирает направление и удобное время — заявка приходит уже структурированной.",
+  "tgContact": "@srv_roman",
+  "sourceChannel": "@srvdetailing",
+  "services": [
+    {
+      "id": "clean",
+      "name": "Химчистка салона",
+      "duration": "по записи",
+      "priceLabel": "по запросу",
+      "note": "салон"
+    },
+    {
+      "id": "ppf",
+      "name": "Оклейка / бронирование",
+      "duration": "по расчёту",
+      "priceLabel": "по запросу",
+      "note": "PPF"
+    },
+    {
+      "id": "polish",
+      "name": "Полировка + керамика",
+      "duration": "по записи",
+      "priceLabel": "по запросу",
+      "note": "кузов"
+    },
+    {
+      "id": "noise",
+      "name": "Шумоизоляция",
+      "duration": "по расчёту",
+      "priceLabel": "по запросу",
+      "note": "салон"
+    }
+  ],
+  "gallery": [
+    {
+      "src": "https://cdn4.telesco.pe/file/C42or_uYEoCh4OHurskt709bnOQ3NfDok_34ZBsNL4MSx1_jkkVCqXEM9uGBZPrR_GyM_1EwoQgzvYmzbp55GN4lp90-9eDsX15ctKhlEc_l1ChCH86JY3njStV_JJnmFNsz4jO4R7M0alOyk1f5y0yTv5g_vaSUMUsB_JibCqnk1PQsFo2z2LN1UsFA-XWr8Wk1WbenHXo_vq-lmOGqTMVsayfV4qxWmGE6EJk1U6Ir3gYNYw44-UReZNcnbHDz8uZuorX9hA0xX_ygW5wFXWKcBBXFOJy2XXYsZ7x4SACXiAVZy5BHMTvBz7R_Tjg1ikXbifBTpHPRDVZ2mmjkTw.jpg",
+      "title": "SRV DETAILING",
+      "meta": "комплексный уход"
+    }
+  ]
+}
