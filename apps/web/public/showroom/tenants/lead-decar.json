@@ -1,0 +1,57 @@
+{
+  "slug": "lead-decar",
+  "name": "De-Car",
+  "shortName": "DE-CAR",
+  "category": "Оклейка · Детейлинг · Санкт-Петербург",
+  "city": "Санкт-Петербург",
+  "phone": "+78129333045",
+  "address": "Санкт-Петербург, Благодатная 63 к1",
+  "accent": "#EE7C36",
+  "hero": "https://cdn4.telesco.pe/file/cPwS2A1SsaV__-_qRdojyaLXaIIVRvtL7Paile5XPs6OgJ4u31j7Ox8RZrio0RUorqIqgxVj-UKUE1zMUQIHYKnyMpplNWeIj8vrkMDEQbAU27hCkOF7_FNQoyzub72CDPFJvS9xRUpV3cfl87mZSwY_ILVt1HNqWwxLio86CCHiSjIR1Y7nvTPuWYQ7uo2SFKkjEMUQDeiTWksm5NuU_P8Wy12RToJIuG70d1ZqO2pYzuGWjoilm4TJMcODppDN1ddlgQEZCqycVuOy6qkivMirbMxYZ_bqIPuSn4V00arAQjeqpG7h4E_wFS61ocqwkfFbfy54FhwqO0Rd7_8xOw.jpg",
+  "appDescription": "Оклейка, брендинг, полировка, химчистка и шумоизоляция с записью в одном приложении",
+  "metric2Value": "10 лет",
+  "metric2Label": "гарантия на материалы",
+  "priceLabel": "расчёт в чате",
+  "priceCaption": "по проекту",
+  "bookingTitle": "Заявка на оклейку или детейлинг",
+  "bookingCopy": "Клиент сразу указывает услугу, автомобиль и время — меньше уточнений в чате.",
+  "tgContact": "@De_Car_Avtostudio",
+  "sourceChannel": "@decar_studio",
+  "services": [
+    {
+      "id": "wrap",
+      "name": "Оклейка кузова",
+      "duration": "по расчёту",
+      "priceLabel": "по запросу",
+      "note": "винил / PPF"
+    },
+    {
+      "id": "brand",
+      "name": "Брендирование",
+      "duration": "по проекту",
+      "priceLabel": "по запросу",
+      "note": "коммерческий транспорт"
+    },
+    {
+      "id": "polish",
+      "name": "Полировка",
+      "duration": "по записи",
+      "priceLabel": "по запросу",
+      "note": "кузов"
+    },
+    {
+      "id": "noise",
+      "name": "Шумоизоляция",
+      "duration": "по расчёту",
+      "priceLabel": "по запросу",
+      "note": "салон"
+    }
+  ],
+  "gallery": [
+    {
+      "src": "https://cdn4.telesco.pe/file/cPwS2A1SsaV__-_qRdojyaLXaIIVRvtL7Paile5XPs6OgJ4u31j7Ox8RZrio0RUorqIqgxVj-UKUE1zMUQIHYKnyMpplNWeIj8vrkMDEQbAU27hCkOF7_FNQoyzub72CDPFJvS9xRUpV3cfl87mZSwY_ILVt1HNqWwxLio86CCHiSjIR1Y7nvTPuWYQ7uo2SFKkjEMUQDeiTWksm5NuU_P8Wy12RToJIuG70d1ZqO2pYzuGWjoilm4TJMcODppDN1ddlgQEZCqycVuOy6qkivMirbMxYZ_bqIPuSn4V00arAQjeqpG7h4E_wFS61ocqwkfFbfy54FhwqO0Rd7_8xOw.jpg",
+      "title": "КАМАЗ",
+      "meta": "матовый винил KPMF8"
+    }
+  ]
+}
