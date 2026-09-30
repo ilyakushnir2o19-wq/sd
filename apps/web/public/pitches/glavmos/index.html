@@ -3,204 +3,65 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ГЛАВМОСДЕТЕЙЛИНГ</title>
+<title>ГЛАВМОС</title>
 <style>
-:root{
-  --bg:#050505;
-  --surface:#131313;
-  --surface2:#171717;
-  --line:#272727;
-  --text:#f4f4f2;
-  --muted:#8d8d89;
-  --accent:#39b56a;
-}
+:root{--bg:#050505;--s:#141414;--line:#292929;--text:#f5f5f3;--muted:#8c8c88;--a:#39b56a}
 *{box-sizing:border-box}
-html,body{margin:0;background:#000;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif}
+html,body{margin:0;background:#000;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
 body{display:flex;justify-content:center}
-.phone{
-  width:430px;
-  min-height:932px;
-  background:var(--bg);
-  position:relative;
-  overflow:hidden;
-  padding-bottom:82px;
-}
-.appbar{
-  height:76px;
-  padding:24px 20px 12px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  border-bottom:1px solid #131313;
-}
-.brand{display:flex;align-items:center;gap:10px;font-weight:750;font-size:15px;letter-spacing:.015em}
-.glyph{width:25px;height:16px;position:relative}
-.glyph:before,.glyph:after{
-  content:"";position:absolute;left:0;width:20px;height:5px;border:2px solid white;border-right:0;transform:skewX(-24deg)
-}
-.glyph:before{top:0}.glyph:after{bottom:0;left:4px}
-.profile{
-  width:38px;height:38px;border:1px solid #303030;border-radius:50%;
-  display:grid;place-items:center;color:#c6c6c3;font-size:16px
-}
-main{padding:18px 20px 36px}
-.hero{
-  height:292px;
-  position:relative;
-  overflow:hidden;
-  border-radius:22px;
-  border:1px solid #2c2c2c;
-  background:#181818;
-}
-.halo{
-  position:absolute;
-  width:260px;height:102px;border-radius:50%;
-  background:var(--accent);
-  left:50%;top:26px;transform:translateX(-50%) rotate(-4deg);
-  opacity:.92;
-}
-.photo{
-  position:absolute;inset:0;
-  background:url('https://cdn4.telesco.pe/file/mJitDkbhCs8OmTrkQbk3lml-pNTdzeUSPvlEYwwufpIbNurH7mjcmRQ0ctpB8jso0lp62lyGtWEdGuZU8Rq8XhZFpCg3m1S4S96p6rdBUBYcIxe_N1TVMWBLw7go_TxwSLyLsvgWmYkeEU2KmpoXwH05DlXbxdS_FYwtTx-F4GWvWYhMcatcTZroJ4M4f4jAAIPeX-QJqsw7GHWY-z7TO8G3j1_CShl_lvDBBal8w_I6UrDGj5H2GnwGmNkkgE6GufoqkxMb1UZm5d3akcwClz5qcGIg1I5GyzpoD4SlcWqNTQnvFm0whGneVVUQuv9FCivZTYxSajSp6aNCQcqfFQ') center/cover no-repeat;
-  filter:saturate(.88) brightness(.76) contrast(1.06);
-}
-.hero:after{
-  content:"";position:absolute;inset:0;
-  background:linear-gradient(180deg,rgba(0,0,0,.02) 40%,rgba(0,0,0,.78) 100%);
-}
-.hero-cta{
-  position:absolute;z-index:2;left:18px;right:18px;bottom:16px;
-  display:flex;justify-content:space-between;align-items:center;
-  font-size:15px;font-weight:700;
-}
-.hero-cta i{font-style:normal;font-size:28px;line-height:1;transform:rotate(-45deg)}
+.phone{width:430px;height:932px;background:var(--bg);overflow:hidden;position:relative}
+.appbar{height:78px;padding:24px 20px 13px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #151515}
+.brand{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:750;letter-spacing:.02em}
+.glyph{width:25px;height:16px;position:relative}.glyph:before,.glyph:after{content:"";position:absolute;left:0;width:20px;height:5px;border:2px solid #fff;border-right:0;transform:skewX(-24deg)}.glyph:before{top:0}.glyph:after{left:4px;bottom:0}
+.profile{width:36px;height:36px;border:1px solid #343434;border-radius:50%;display:grid;place-items:center;color:#aaa;font-size:14px}
+main{padding:20px}
+.hero{height:330px;border:1px solid #2a2a2a;border-radius:22px;overflow:hidden;position:relative;background:#171817}
+.hero img{width:100%;height:100%;object-fit:cover;display:block}
+.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(0,0,0,.72) 100%)}
+.hero-cta{position:absolute;z-index:2;left:18px;right:18px;bottom:17px;display:flex;align-items:center;justify-content:space-between;font-size:15px;font-weight:700}
+.hero-cta i{font-style:normal;font-size:28px;transform:rotate(-45deg);line-height:1}
 .intro{padding:18px 2px 0}
-h1{margin:0;font-size:30px;line-height:1.02;letter-spacing:-.042em;font-weight:780}
-.subtitle{
-  margin-top:9px;
-  max-width:360px;
-  font-size:13.5px;line-height:1.45;color:var(--muted);
-}
-.case{
-  margin-top:11px;
-  font-size:12px;color:var(--accent);font-weight:600;
-}
-.stats{
-  display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:19px;
-}
-.stat{
-  min-height:84px;
-  border:1px solid var(--line);
-  border-radius:17px;
-  background:var(--surface);
-  padding:14px 15px;
-}
-.stat strong{display:block;font-size:21px;line-height:1;font-weight:750}
-.stat small{display:block;margin-top:11px;color:var(--muted);font-size:11px}
-.price{
-  min-height:58px;margin-top:10px;
-  border:1px solid var(--line);
-  border-radius:16px;
-  background:var(--surface);
-  padding:0 15px;
-  display:flex;align-items:center;justify-content:space-between;
-}
-.price b{font-size:18px}
-.price span{font-size:11px;color:var(--muted)}
-.booking{margin-top:24px}
-.booking h2{margin:0 0 12px;font-size:24px;line-height:1;font-weight:760;letter-spacing:-.035em}
-.booking-card{
-  min-height:172px;
-  position:relative;
-  overflow:hidden;
-  border:1px solid #2d2d2d;
-  border-radius:20px;
-  background:linear-gradient(180deg,#0a0a0a,#101010);
-  padding:18px;
-}
-.booking-card:after{
-  content:"";position:absolute;
-  width:260px;height:95px;border-radius:50%;
-  border:2px solid var(--accent);
-  right:-42px;bottom:-58px;opacity:.72;
-}
-.booking-card h3{margin:0;font-size:18px;font-weight:730}
-.booking-card p{
-  margin:7px 0 0;max-width:285px;
-  color:var(--muted);font-size:12.5px;line-height:1.4
-}
-.book-now{position:absolute;z-index:2;left:18px;bottom:18px;font-size:13px;font-weight:700}
-.ai{
-  position:absolute;z-index:2;right:14px;bottom:52px;
-  width:42px;height:42px;border-radius:50%;
-  border:1px solid #333;background:#080808;color:var(--accent);
-  display:grid;place-items:center;font-size:18px
-}
-.services{margin-top:34px}
-.services h2{font-size:24px;margin:0 0 12px}
-.service{
-  display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;
-  padding:15px 0;border-top:1px solid #1d1d1d
-}
-.service:last-child{border-bottom:1px solid #1d1d1d}
-.service b{display:block;font-size:14px}
-.service small{display:block;margin-top:5px;color:var(--muted);font-size:11px}
-.service strong{font-size:13px;white-space:nowrap}
-.nav{
-  position:absolute;left:0;right:0;bottom:0;
-  height:76px;border-top:1px solid #171717;background:#050505;
-  display:grid;grid-template-columns:repeat(3,1fr);
-  align-items:center;text-align:center;
-  color:#6f6f6f;font-size:10.5px
-}
-.nav div:before{display:block;font-size:21px;margin-bottom:4px}
-.nav .home:before{content:"⌂"}.nav .services-tab:before{content:"▦"}.nav .record:before{content:"▣"}
-.nav .active{color:#fff}
+h1{margin:0;font-size:29px;line-height:1;font-weight:780;letter-spacing:-.04em}
+.subtitle{margin-top:7px;color:var(--muted);font-size:13px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
+.stat{height:92px;border:1px solid var(--line);border-radius:18px;background:var(--s);padding:15px}
+.stat strong{font-size:22px;line-height:1;font-weight:760}.stat small{display:block;margin-top:13px;color:var(--muted);font-size:11px}
+.price{height:62px;margin-top:10px;border:1px solid var(--line);border-radius:17px;background:var(--s);padding:0 15px;display:flex;align-items:center;justify-content:space-between}
+.price b{font-size:18px}.price span{font-size:11px;color:var(--muted)}
+.booking-title{margin:28px 0 13px;font-size:26px;font-weight:760;letter-spacing:-.04em}
+.booking-card{height:146px;border:1px solid #2c2c2c;border-radius:20px;background:#0b0b0b;position:relative;overflow:hidden;padding:18px}
+.booking-card:after{content:"";position:absolute;width:250px;height:90px;border:2px solid var(--a);border-radius:50%;right:-42px;bottom:-56px;opacity:.72}
+.booking-card strong{font-size:17px}.booking-card small{display:block;color:var(--muted);font-size:11px;margin-top:6px}.book{position:absolute;left:18px;bottom:17px;font-size:13px;font-weight:700}.ai{position:absolute;right:14px;bottom:48px;width:42px;height:42px;border-radius:50%;border:1px solid #353535;background:#070707;color:var(--a);display:grid;place-items:center;font-size:18px}
+.nav{position:absolute;left:0;right:0;bottom:0;height:76px;border-top:1px solid #171717;background:#050505;display:grid;grid-template-columns:repeat(3,1fr);align-items:center;text-align:center;font-size:10px;color:#6d6d6d}
+.nav div:before{display:block;font-size:20px;margin-bottom:4px}.nav .h:before{content:"⌂"}.nav .u:before{content:"▦"}.nav .r:before{content:"▣"}.nav .on{color:#fff}
 </style>
 </head>
 <body>
 <div class="phone">
-<header class="appbar">
-  <div class="brand"><span class="glyph"></span>ГЛАВМОС</div>
-  <div class="profile">○</div>
-</header>
-<main>
-  <section class="hero">
-    <div class="halo"></div><div class="photo"></div>
-    <div class="hero-cta"><span>Записаться</span><i>→</i></div>
-  </section>
-
-  <section class="intro">
-    <h1>ГЛАВМОСДЕТЕЙЛИНГ</h1>
-    <div class="subtitle">Оклейка, полировка и химчистка — запись без лишней переписки.</div>
-    <div class="case">BMW X6 · оклейка + полировка + химчистка + керамика</div>
-  </section>
-
-  <div class="stats">
-    <div class="stat"><strong>4</strong><small>направления в приложении</small></div>
-    <div class="stat"><strong>TG</strong><small>@ignatiy7 · запись</small></div>
-  </div>
-
-  <div class="price"><b>от 1 500 ₽</b><span>по публичному прайсу</span></div>
-
-  <section class="booking">
-    <h2>Запись в студию</h2>
-    <div class="booking-card">
-      <h3>Услуга + авто + время</h3>
-      <p>Клиент сразу отправляет готовую заявку — остаётся только подтвердить.</p>
-      <div class="book-now">Записаться</div>
-      <div class="ai">✦</div>
+  <header class="appbar"><div class="brand"><span class="glyph"></span>ГЛАВМОС</div><div class="profile">○</div></header>
+  <main>
+    <section class="hero">
+      <img src="./hero.svg" alt="">
+      <div class="hero-cta"><span>Записаться</span><i>→</i></div>
+    </section>
+    <section class="intro">
+      <h1>ГЛАВМОС</h1>
+      <div class="subtitle">Детейлинг · Москва</div>
+    </section>
+    <div class="stats">
+      <div class="stat"><strong>4</strong><small>услуги в приложении</small></div>
+      <div class="stat"><strong>Москва</strong><small>Ташкентская, 28</small></div>
     </div>
-  </section>
-
-  <section class="services">
-    <h2>Услуги</h2>
-    <div class="service"><div><b>Оклейка</b><small>PPF / винил</small></div><strong>от 1 500 ₽</strong></div>
-    <div class="service"><div><b>Керамика</b><small>Ceramic Pro</small></div><strong>13 000 ₽</strong></div>
-    <div class="service"><div><b>Полировка</b><small>кузов</small></div><strong>по запросу</strong></div>
-  </section>
-</main>
-<nav class="nav"><div class="home active">Главная</div><div class="services-tab">Услуги</div><div class="record">Моя запись</div></nav>
+    <div class="price"><b>от 1 500 ₽</b><span>по публичному прайсу</span></div>
+    <div class="booking-title">Запись в студию</div>
+    <section class="booking-card">
+      <strong>Свежий вид для вашего авто</strong>
+      <small>Услуга и удобное время</small>
+      <div class="book">Записаться</div>
+      <div class="ai">✦</div>
+    </section>
+  </main>
+  <nav class="nav"><div class="h on">Главная</div><div class="u">Услуги</div><div class="r">Моя запись</div></nav>
 </div>
 </body>
 </html>
