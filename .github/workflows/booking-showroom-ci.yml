@@ -49,3 +49,32 @@ jobs:
               assert len(data["services"]) >= 2, f"{path}: needs >=2 services"
           print("showroom assets ok")
           PY
+
+      - name: Render premium mobile previews
+        shell: bash
+        run: |
+          python -m http.server 8765 >/tmp/showroom-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID || true' EXIT
+          sleep 1
+
+          CHROME="$(command -v google-chrome || command -v chromium || command -v chromium-browser)"
+          test -n "$CHROME"
+
+          "$CHROME" --headless=new --no-sandbox --disable-gpu             --window-size=430,932             --screenshot=/tmp/graphite.png             "http://127.0.0.1:8765/apps/web/public/showroom/?tenant=graphite"
+          "$CHROME" --headless=new --no-sandbox --disable-gpu             --window-size=430,932             --screenshot=/tmp/voltage.png             "http://127.0.0.1:8765/apps/web/public/showroom/?tenant=voltage"
+
+          "$CHROME" --headless=new --no-sandbox --disable-gpu             --dump-dom             "http://127.0.0.1:8765/apps/web/public/showroom/?tenant=graphite" > /tmp/graphite.html
+
+          grep -q "GRAPHITE" /tmp/graphite.html
+          grep -q "Ближайшее свободное окно" /tmp/graphite.html
+          grep -q "Услуги" /tmp/graphite.html
+          test "$(stat -c%s /tmp/graphite.png)" -gt 20000
+          test "$(stat -c%s /tmp/voltage.png)" -gt 20000
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: premium-showroom-screens
+          path: |
+            /tmp/graphite.png
+            /tmp/voltage.png
