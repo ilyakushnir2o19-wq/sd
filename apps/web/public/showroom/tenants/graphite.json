@@ -1,27 +1,112 @@
 {
-  "slug":"graphite",
-  "name":"GRAPHITE Detailing",
-  "shortName":"GRAPHITE",
-  "category":"Detailing studio · Москва",
-  "headline":"Машина снова выглядит новой.",
-  "subheadline":"Запись без звонков. Выберите услугу и удобное время.",
-  "phone":"+79990000000",
-  "address":"Москва, Звенигородское шоссе, 28",
-  "hours":"09:00–22:00",
-  "rating":"4.9",
-  "reviewsLabel":"187 отзывов",
-  "accent":"#c6ff38",
-  "hero":"https://images.unsplash.com/photo-1607860108855-64acf2078ed9?auto=format&fit=crop&w=1200&q=85",
-  "aiExample":"Хочу полировку и керамику, BMW X5",
-  "proof":[
-    {"title":"Фото до/после","text":"Фиксируем состояние авто"},
-    {"title":"Цена заранее","text":"Без сюрпризов после работ"}
+  "slug": "graphite",
+  "name": "GRAPHITE Detailing",
+  "shortName": "GRAPHITE",
+  "logoMark": "G",
+  "brandLine": "detailing studio",
+  "category": "Detailing studio · Москва",
+  "city": "Москва",
+  "headline": "Вернём машине тот самый вид.",
+  "subheadline": "Детейлинг, защита и уход. Выберите услугу и свободное время без звонка.",
+  "phone": "+79990000000",
+  "address": "Москва, Звенигородское шоссе, 28",
+  "hours": "09:00–22:00",
+  "status": "Открыто до 22:00",
+  "rating": "4.9",
+  "reviewsLabel": "187 отзывов",
+  "accent": "#C9FF3D",
+  "accentSecondary": "#83FF74",
+  "themeColor": "#08090B",
+  "nearestLabel": "Сегодня",
+  "nearestSlot": "19:00",
+  "nearestNote": "Можно оставить авто вечером",
+  "busySlots": [
+    "13:00"
   ],
-  "slots":["10:00","11:30","13:00","15:30","17:00","19:00"],
-  "services":[
-    {"id":"wash","name":"Детейлинг-мойка","duration":"1 ч 20 мин","price":4500,"note":"кузов + салон","description":"Безопасная мойка кузова, дисков, проёмов и детальная уборка салона."},
-    {"id":"polish","name":"Полировка кузова","duration":"5–7 часов","price":18000,"note":"возвращает глянец","description":"Удаляем мелкие риски и восстанавливаем глубину цвета."},
-    {"id":"ceramic","name":"Керамическое покрытие","duration":"1 день","price":32000,"note":"защита до 24 мес","description":"Подготовка поверхности и нанесение защитного состава."},
-    {"id":"interior","name":"Химчистка салона","duration":"5 часов","price":14000,"note":"с сушкой","description":"Глубокая чистка текстиля, кожи и труднодоступных зон."}
+  "hero": "https://images.unsplash.com/photo-1607860108855-64acf2078ed9?auto=format&fit=crop&w=1400&q=88",
+  "about": "Студия ухода за автомобилем: безопасная мойка, полировка, защитные покрытия и химчистка салона.",
+  "routeNote": "12 минут от Москва-Сити",
+  "galleryLabel": "последние проекты",
+  "gallery": [
+    {
+      "src": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=1200&q=86",
+      "title": "Porsche 911",
+      "meta": "полировка + керамика"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&w=1200&q=86",
+      "title": "Lamborghini",
+      "meta": "детейлинг кузова"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1200&q=86",
+      "title": "Mercedes-AMG",
+      "meta": "защита кузова"
+    }
+  ],
+  "aiExample": "BMW X5, чёрный. Хочу убрать мелкие риски и добавить блеск.",
+  "aiAnswer": "Для этого подойдёт полировка кузова. После осмотра можно добавить керамическое покрытие. Ближайшее окно — сегодня в 19:00.",
+  "proof": [
+    {
+      "icon": "shield",
+      "title": "Цена заранее",
+      "text": "Согласуем до работ"
+    },
+    {
+      "icon": "camera",
+      "title": "Фото до / после",
+      "text": "Фиксируем результат"
+    },
+    {
+      "icon": "clock",
+      "title": "Точно по времени",
+      "text": "Без живой очереди"
+    }
+  ],
+  "slots": [
+    "10:00",
+    "11:30",
+    "13:00",
+    "15:30",
+    "17:00",
+    "19:00"
+  ],
+  "services": [
+    {
+      "id": "wash",
+      "name": "Детейлинг-мойка",
+      "duration": "1 ч 20 мин",
+      "price": 4500,
+      "note": "кузов + салон",
+      "description": "Безопасная мойка кузова, дисков, проёмов и детальная уборка салона.",
+      "image": "https://images.unsplash.com/photo-1607860108855-64acf2078ed9?auto=format&fit=crop&w=800&q=82"
+    },
+    {
+      "id": "polish",
+      "name": "Полировка кузова",
+      "duration": "5–7 часов",
+      "price": 18000,
+      "note": "возвращает глянец",
+      "description": "Удаляем мелкие риски и восстанавливаем глубину цвета.",
+      "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=800&q=82"
+    },
+    {
+      "id": "ceramic",
+      "name": "Керамическое покрытие",
+      "duration": "1 день",
+      "price": 32000,
+      "note": "защита до 24 мес",
+      "description": "Подготовка поверхности и нанесение защитного состава.",
+      "image": "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&w=800&q=82"
+    },
+    {
+      "id": "interior",
+      "name": "Химчистка салона",
+      "duration": "5 часов",
+      "price": 14000,
+      "note": "с сушкой",
+      "description": "Глубокая чистка текстиля, кожи и труднодоступных зон.",
+      "image": "https://images.unsplash.com/photo-1507136566006-cfc505b114fc?auto=format&fit=crop&w=800&q=82"
+    }
   ]
 }
