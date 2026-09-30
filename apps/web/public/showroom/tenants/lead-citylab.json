@@ -1,0 +1,56 @@
+{
+  "slug": "lead-citylab",
+  "name": "CITYLAB DETAIL",
+  "shortName": "CITYLAB",
+  "category": "Детейлинг · Оклейка · Москва",
+  "city": "Москва",
+  "address": "Москва, Ленинский пр-т, 111 к1",
+  "accent": "#D6B44A",
+  "hero": "https://cdn4.telesco.pe/file/nCZJUHSLnpP9TqhuTHSScdpFkNoH4siGLUzDa8PlpxanrFhOAoe1Dowz1WybSFYRq_FfZ89PY3pixfB7MKaFTP13HY4BeGiAhc8ktnNJniBpXknSxIVwV4cBp7RY6iWbvCGu0e-cTageVxFPVCuf6bV2lDyeg37TWIZNXVu_diKxYFcs3haxwOzr5mcBIWjLuVLvbVvFzG-1i6M4UdpFwGmrNO0I-DepIxmuVOeg6wAttIvljGtEDtHACkbW95KFbElJlqxEkyRkjGclr4d5ndGLbjdbbSQKU9YRBU3FXvXVhoN2cx_dfd6ckPUp6of92sTWVp79VyP8cms7sQ842g.jpg",
+  "appDescription": "Оклейка, полировка и защитные покрытия — запись для клиента в пару касаний",
+  "metric2Value": "5.0",
+  "metric2Label": "гарантия / оценка",
+  "priceFrom": 2000,
+  "priceCaption": "публичный прайс",
+  "bookingTitle": "Подобрать услугу и время онлайн",
+  "bookingCopy": "Клиент выбирает задачу и оставляет заявку без длинной переписки.",
+  "tgContact": "@CityLabDetail",
+  "sourceChannel": "@city_lab_detail",
+  "services": [
+    {
+      "id": "rain",
+      "name": "Антидождь",
+      "duration": "по записи",
+      "price": 2000,
+      "note": "стекло + зеркала"
+    },
+    {
+      "id": "polish",
+      "name": "Детейлинг-полировка",
+      "duration": "по записи",
+      "price": 8000,
+      "note": "от"
+    },
+    {
+      "id": "ceramic",
+      "name": "Керамическое покрытие",
+      "duration": "по записи",
+      "priceLabel": "по запросу",
+      "note": "кузов"
+    },
+    {
+      "id": "wrap",
+      "name": "Оклейка PPF",
+      "duration": "по расчёту",
+      "priceLabel": "по запросу",
+      "note": "полиуретан"
+    }
+  ],
+  "gallery": [
+    {
+      "src": "https://cdn4.telesco.pe/file/nCZJUHSLnpP9TqhuTHSScdpFkNoH4siGLUzDa8PlpxanrFhOAoe1Dowz1WybSFYRq_FfZ89PY3pixfB7MKaFTP13HY4BeGiAhc8ktnNJniBpXknSxIVwV4cBp7RY6iWbvCGu0e-cTageVxFPVCuf6bV2lDyeg37TWIZNXVu_diKxYFcs3haxwOzr5mcBIWjLuVLvbVvFzG-1i6M4UdpFwGmrNO0I-DepIxmuVOeg6wAttIvljGtEDtHACkbW95KFbElJlqxEkyRkjGclr4d5ndGLbjdbbSQKU9YRBU3FXvXVhoN2cx_dfd6ckPUp6of92sTWVp79VyP8cms7sQ842g.jpg",
+      "title": "BMW M5 G90",
+      "meta": "PPF"
+    }
+  ]
+}
