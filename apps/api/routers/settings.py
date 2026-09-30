@@ -1095,6 +1095,13 @@ INTEGRATIONS = [
         ],
     },
     {
+        "id": "attio", "name": "Attio", "icon": "attio",
+        "description": "Upsert enriched leads as Attio People records.",
+        "fields": [
+            {"key": "ATTIO_API_TOKEN", "label": "API Token", "secret": True, "placeholder": "Attio workspace token"},
+        ],
+    },
+    {
         "id": "airtable", "name": "Airtable", "icon": "airtable",
         "description": "Append rows to an Airtable base (output column → Airtable).",
         "fields": [
