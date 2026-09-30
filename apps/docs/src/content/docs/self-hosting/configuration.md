@@ -79,7 +79,7 @@ environment. Provider keys can also be set per workspace in
 `GOOGLE_API_KEY`, `GOOGLE_CSE_ID`, `GOOGLE_PLACES_API_KEY`.
 
 `HUBSPOT_TOKEN`, `SALESFORCE_INSTANCE_URL`, `SALESFORCE_ACCESS_TOKEN`,
-`AIRTABLE_TOKEN`, `GOOGLE_SHEETS_TOKEN`, `INSTANTLY_API_KEY`,
+`ATTIO_API_TOKEN`, `AIRTABLE_TOKEN`, `GOOGLE_SHEETS_TOKEN`, `INSTANTLY_API_KEY`,
 `SMARTLEAD_API_KEY`. See [Providers](/guides/providers/) and
 [Outputs](/guides/outputs/).
 
