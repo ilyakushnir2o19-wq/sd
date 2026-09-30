@@ -23,6 +23,9 @@ from apps.api.services.leadgen.enrichment.provider import (
 from apps.api.services.leadgen.enrichment.providers.job_tech_intent import (
     analyze_job_text,
 )
+from apps.api.services.leadgen.enrichment.automation_opportunity import (
+    analyze_job_evidence,
+)
 from apps.api.services.leadgen.models import Lead
 
 logger = logging.getLogger("leadgen.jobspy")
@@ -53,6 +56,11 @@ def _analyze_jobs(jobs_data: list) -> Dict:
         "score_boost": 0,
         "technologies": [],
         "tech_adoption_signal": [],
+        "manual_ops": {},
+        "manual_ops_score": 0,
+        "manual_ops_task_categories": [],
+        "manual_ops_evidence_urls": [],
+        "automation_mechanism_hint": "unknown",
     }
 
     if not jobs_data:
@@ -115,6 +123,16 @@ def _analyze_jobs(jobs_data: list) -> Dict:
     # displacement intent.
     if any(s["category"] == "Competitor Tools" for s in signals["tech_adoption_signal"]):
         signals["score_boost"] += 5
+
+    # Opportunity Hunter: mine the vacancy text itself for evidence of
+    # repetitive digital work. This is deterministic and source-bound; the
+    # research/LLM layer can expand it later but cannot fabricate the seed.
+    manual_ops = analyze_job_evidence(jobs_data)
+    signals["manual_ops"] = manual_ops
+    signals["manual_ops_score"] = manual_ops["manual_ops_score"]
+    signals["manual_ops_task_categories"] = manual_ops["task_categories"]
+    signals["manual_ops_evidence_urls"] = manual_ops["evidence_urls"]
+    signals["automation_mechanism_hint"] = manual_ops["mechanism_hint"]
 
     # Cap roles list
     signals["roles"] = signals["roles"][:5]
@@ -182,6 +200,8 @@ class JobSpySignalProvider(EnrichmentProvider):
         jobs = []
         queries = [
             f'site:indeed.com "{company}" jobs',
+            f'site:linkedin.com/jobs "{company}"',
+            f'site:glassdoor.com/Job "{company}"',
             f'site:naukri.com "{company}" jobs',
         ]
 
@@ -210,10 +230,21 @@ class JobSpySignalProvider(EnrichmentProvider):
                 job_title = re.sub(r'\s*[\|·]\s*(Indeed|Naukri|LinkedIn).*$', '', job_title)
 
                 if job_title and len(job_title) < 100:
+                    if "linkedin.com" in query:
+                        source = "linkedin"
+                    elif "glassdoor.com" in query:
+                        source = "glassdoor"
+                    elif "naukri.com" in query:
+                        source = "naukri"
+                    else:
+                        source = "indeed"
+                    source_url = r.get("href") or r.get("url") or ""
                     jobs.append({
                         "title": job_title,
-                        "description": body[:200],
-                        "source": "indeed" if "indeed" in query else "naukri",
+                        "description": body[:600],
+                        "source": source,
+                        "source_url": source_url,
+                        "job_url": source_url,
                     })
 
             await asyncio.sleep(self.delay)
