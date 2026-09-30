@@ -185,12 +185,14 @@ workbook:
           "judgment_level": "low|medium|high|unknown",
           "physical_only": false,
           "relationship_heavy": false,
+          "evidence_kill": false,
           "source_urls": ["https://..."]
         }
         HARD RULES:
         - A URL may appear only if it was present in the supplied evidence.
         - If evidence is missing, use empty arrays / "unknown" / false; never fill gaps from general knowledge.
         - automation_paths must be empty when feasibility evidence says NONE/NO.
+        - evidence_kill=true if job evidence says KILL, feasibility says NO/NONE, or the company match is doubtful.
         - physical_only=true when the evidenced task cannot be completed primarily in digital systems.
       width: 460
 
