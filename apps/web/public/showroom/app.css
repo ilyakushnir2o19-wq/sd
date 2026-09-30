@@ -75,7 +75,7 @@ button:disabled{opacity:.42;cursor:not-allowed}
 }
 .icon-btn svg{width:18px;height:18px}
 .hero-status{
-  position:absolute;z-index:2;right:19px;bottom:210px;display:flex;align-items:center;gap:7px;
+  position:absolute;z-index:2;right:19px;top:76px;display:flex;align-items:center;gap:7px;
   border-radius:999px;padding:8px 10px;font-size:10px;font-weight:800;letter-spacing:.07em;text-transform:uppercase
 }
 .status-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 14%,transparent)}
