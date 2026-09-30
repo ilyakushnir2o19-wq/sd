@@ -48,7 +48,7 @@ jobs:
           print(json.dumps(data[:10] if isinstance(data,list) else data, indent=2)[:12000])
           PY
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: battle-test-results
           path: |

@@ -117,7 +117,7 @@ jobs:
           fi
           python scripts/2gis_to_opengtm.py "${args[@]}"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: 2gis-${{ matrix.city }}
           path: |
