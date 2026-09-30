@@ -1,0 +1,54 @@
+name: Detailing Campaign Renders
+
+on:
+  push:
+    paths:
+      - "apps/web/public/showroom/**"
+      - ".github/workflows/detailing-campaign-render.yml"
+  workflow_dispatch:
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate campaign tenants
+        run: |
+          node --check apps/web/public/showroom/app.js
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("apps/web/public/showroom/tenants")
+          files=sorted(root.glob("lead-*.json"))
+          assert len(files) == 10, len(files)
+          for path in files:
+              data=json.loads(path.read_text())
+              for key in ("slug","name","hero","services","tgContact"):
+                  assert data.get(key), f"{path}: missing {key}"
+          print("campaign tenants:", len(files))
+          PY
+
+      - name: Render ten mobile screenshots
+        shell: bash
+        run: |
+          mkdir -p /tmp/detailing-demos
+          python -m http.server 8765 >/tmp/showroom-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID || true' EXIT
+          sleep 1
+
+          CHROME="$(command -v google-chrome || command -v chromium || command -v chromium-browser)"
+          test -n "$CHROME"
+
+          for TENANT in             lead-glavmos             lead-proservice             lead-citylab             lead-tunec             lead-easy             lead-studio1798             lead-tiptop             lead-dimtim             lead-srv             lead-decar
+          do
+            "$CHROME" --headless=new --no-sandbox --disable-gpu --virtual-time-budget=5000               --window-size=390,844               --screenshot="/tmp/detailing-demos/$TENANT.png"               "http://127.0.0.1:8765/apps/web/public/showroom/?tenant=$TENANT"
+            test "$(stat -c%s "/tmp/detailing-demos/$TENANT.png")" -gt 15000
+          done
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: detailing-10-personalized-demos
+          path: /tmp/detailing-demos/*.png
