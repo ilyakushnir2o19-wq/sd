@@ -4,6 +4,9 @@ on:
   push:
     paths:
       - ".github/workflows/2gis-quick.yml"
+      - "scripts/2gis_to_opengtm.py"
+      - "apps/api/services/leadgen/twogis.py"
+      - "tests/test_2gis_bridge.py"
   workflow_dispatch:
 
 jobs:
@@ -66,7 +69,25 @@ jobs:
           Path("data/2gis/quick-slim.json").write_text(json.dumps(slim,ensure_ascii=False,indent=2),encoding="utf-8")
           print(json.dumps(slim,ensure_ascii=False,indent=2))
           PY
+      - name: Normalize for OpenGTM and optionally ingest
+        env:
+          OPENGTM_URL: ${{ secrets.OPENGTM_URL }}
+          OPENGTM_2GIS_WORKBOOK_ID: ${{ secrets.OPENGTM_2GIS_WORKBOOK_ID }}
+          OPENGTM_2GIS_INGEST_TOKEN: ${{ secrets.OPENGTM_2GIS_INGEST_TOKEN }}
+        run: |
+          python -m pip install -q requests
+          args=(data/2gis/quick.json --city moscow --output data/2gis/quick-opengtm.json)
+          if [[ -n "$OPENGTM_URL" && -n "$OPENGTM_2GIS_WORKBOOK_ID" && -n "$OPENGTM_2GIS_INGEST_TOKEN" ]]; then
+            echo "OpenGTM ingest configured; pushing normalized rows"
+            args+=(--ingest)
+          else
+            echo "OpenGTM ingest secrets not configured; artifact-only mode"
+          fi
+          python scripts/2gis_to_opengtm.py "${args[@]}"
+
       - uses: actions/upload-artifact@v4
         with:
           name: 2gis-quick
-          path: data/2gis/quick-slim.json
+          path: |
+            data/2gis/quick-slim.json
+            data/2gis/quick-opengtm.json
