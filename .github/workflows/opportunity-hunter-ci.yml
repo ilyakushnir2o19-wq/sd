@@ -1,0 +1,27 @@
+name: Opportunity Hunter CI
+
+on:
+  push:
+    paths:
+      - ".github/workflows/opportunity-hunter-ci.yml"
+      - "tests/test_attio_crm.py"
+      - "apps/api/services/crm/attio.py"
+      - "apps/api/services/workbook/output.py"
+      - "apps/api/routers/settings.py"
+      - ".env.example"
+      - "apps/docs/src/content/docs/guides/outputs.md"
+      - "apps/docs/src/content/docs/self-hosting/configuration.md"
+  workflow_dispatch:
+
+jobs:
+  attio-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade uv
+          uv sync --dev
+      - name: Run Attio contract tests
+        run: uv run pytest -q tests/test_attio_crm.py
