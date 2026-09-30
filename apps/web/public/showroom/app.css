@@ -207,3 +207,21 @@ h1{font-size:clamp(39px,10vw,50px);line-height:.94;letter-spacing:-.062em;margin
   body{padding:24px 0}.app-shell{min-height:calc(100svh - 48px);border-radius:36px;border:1px solid rgba(255,255,255,.08)}
   .bottom-nav{bottom:24px;border-radius:0 0 36px 36px}.sheet{margin-bottom:24px;border-radius:31px}
 }
+
+/* premium polish fixes */
+button{appearance:none;-webkit-appearance:none;text-align:left}
+.availability,.location-card,.work-shot,.date,.slot,.suggestion,.nav-item,.icon-btn,.hero-primary,.hero-secondary,.primary,.secondary{font-family:inherit}
+.work-shot{padding:0;color:inherit}
+.location-card>i:last-child{width:18px;height:18px;color:var(--muted);display:grid;place-items:center}
+.location-card>i:last-child svg{width:18px;height:18px}
+.location-icon svg{width:17px;height:17px}
+.primary,.secondary{display:flex;align-items:center;justify-content:center;gap:8px;text-align:center}
+.primary svg,.secondary svg{width:17px;height:17px}
+.success-wrap p{color:var(--muted);font-size:13px;line-height:1.55;margin:0 0 8px}
+.sheet .location-card{width:100%;color:var(--text);text-align:left}
+.gallery button,.availability,.location-card{color:var(--text)}
+@media (hover:hover){
+  .availability:hover{border-color:color-mix(in srgb,var(--accent) 42%,var(--line));transform:translateY(-1px)}
+  .service:hover .service-arrow{background:#262931}
+  .work-shot:hover{filter:brightness(1.04)}
+}
