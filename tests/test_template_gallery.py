@@ -59,10 +59,21 @@ def test_manual_ops_arbitrage_recipe_has_money_signal_pipeline():
     columns = {col["id"]: col for col in recipe["workbook"]["columns"]}
     assert columns["src_manual_ops"]["type"] == "source"
     assert columns["manual_work"]["type"] == "research"
-    assert columns["automation_score"]["type"] == "ai_formula"
+    assert columns["website_process"]["type"] == "research"
+    assert columns["feasibility"]["type"] == "research"
+    assert columns["opportunity_evidence"]["type"] == "ai_formula"
+    assert columns["opportunity_evidence"]["output_format"] == "json"
+    assert columns["automation_score"]["type"] == "formula"
+    assert columns["automation_score"]["formula"] == "automation_score({opportunity_evidence})"
+    assert columns["mechanism"]["formula"] == "automation_mechanism({opportunity_evidence})"
+    assert columns["qualification_gate"]["formula"] == "automation_gate({opportunity_evidence})"
+    assert columns["pilot_spec"]["condition"] == '{qualification_gate} == "PASS"'
     assert columns["contact"]["target_field"] == "contact_person"
+    assert columns["contact"]["condition"] == '{qualification_gate} == "PASS"'
     assert columns["email"]["target_field"] == "email"
+    assert "qualification_gate" in columns["email"]["condition"]
     assert columns["save"]["destination"] == "crm"
+    assert columns["save"]["condition"] == '{qualification_gate} == "PASS"'
 
 
 def test_slugs_unique():

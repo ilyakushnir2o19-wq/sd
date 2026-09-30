@@ -1,18 +1,19 @@
-# Opportunity Hunter — turn public hiring spend into automation prospects.
+# Opportunity Hunter v2 — evidence first, automation second, outreach last.
 slug: manual-ops-arbitrage
-name: "Manual-ops arbitrage → buyers → CRM"
+name: "Evidence-to-automation → buyers → CRM"
 description: >-
-  Find companies paying people to do repetitive digital operations, extract
-  evidence from live job postings, score whether the work is realistically
-  automatable, then find a decision maker and verified contact.
+  Find companies paying people to do repetitive digital operations, prove the
+  workflow with public sources, verify that a concrete automation path exists,
+  score it deterministically, and only then spend money finding a buyer.
 category: research
 icon: scan-search
 workbook:
   description: >-
-    A vacancy is a public budget signal. This recipe starts with companies
-    actively hiring operations/admin/data-entry/procurement staff, verifies the
-    actual manual workflow from public evidence, kills weak targets, and only
-    then finds the buyer. Configure your CRM destination after import.
+    A vacancy is a public budget signal, not proof by itself. This recipe
+    triangulates job evidence with the company's own public workflow, checks
+    technical feasibility, converts the evidence to a strict schema, and runs a
+    deterministic PASS/REVIEW/KILL gate before contact enrichment. Configure
+    your CRM destination after import.
   columns:
     - id: src_manual_ops
       name: "Source: companies hiring manual ops"
@@ -22,7 +23,8 @@ workbook:
           Companies actively hiring for repetitive digital operations roles:
           order entry, operations coordinator, data entry, procurement admin,
           vendor portal, inventory admin, ecommerce operations, back office,
-          reporting, document processing, or similar computer-based work.
+          reporting, document processing, scheduling, inbox/ticket operations,
+          or similar computer-based work.
         industry: "any"
         keywords_any:
           - order entry
@@ -35,6 +37,8 @@ workbook:
           - back office
           - reporting
           - document processing
+          - scheduling coordinator
+          - order processing
       channels:
         categories: [jobs]
       target_rows: 200
@@ -56,56 +60,191 @@ workbook:
       type: waterfall
       target_field: hiring_signals
       waterfall: [ats_hiring, jobspy]
-      width: 260
+      width: 300
 
     - id: manual_work
-      name: Manual workflow evidence
+      name: "Evidence 1: paid manual workflow"
       type: research
       output_format: text
       max_steps: 5
       prompt: |-
-        ROLE: You investigate whether a company is currently paying a person to do repetitive digital work.
-        CONTEXT: Company: {company}. Website: {website}. Hiring signals: {hiring_signals}.
+        ROLE: Evidence investigator. Your job is to prove or disprove that this company is paying a human to do repetitive digital work.
+        COMPANY: {company}
+        WEBSITE: {website}
+        HIRING SIGNALS: {hiring_signals}
         TASK:
-        1. Find a current or recent job posting from this company.
-        2. Extract ONLY concrete duties that repeat in software, websites, spreadsheets, email, documents, portals, CRM/ERP, or reporting tools.
-        3. Name any systems/tools explicitly mentioned.
-        4. Capture salary/rate/headcount or another budget signal when published.
-        5. Include the source URL.
-        6. If the role is mainly physical work, relationship work, creative judgment, management, or evidence is weak, mark KILL.
-        FORMAT: One compact block:
-        TASKS: ...
-        SYSTEMS: ...
-        BUDGET: ...
-        SOURCE: ...
+        1. Find a current/recent vacancy from THIS company. Prefer the exact URLs already present in hiring signals, then search public job boards/careers pages.
+        2. Extract only duties that repeatedly transform digital INPUT into digital OUTPUT inside software, browser portals, spreadsheets, email, documents, CRM or ERP.
+        3. For every duty, state INPUT -> ACTION -> OUTPUT and name systems explicitly mentioned.
+        4. Capture salary/rate/headcount or another public budget/urgency signal.
+        5. Give an exact source URL for every factual claim.
+        6. Separate normal-path repetitive work from exceptions/judgment.
+        7. Mark KILL if the role is mainly physical, relationship/management/creative work, the company match is doubtful, or there is no concrete digital task.
+        FORMAT:
+        MANUAL_TASKS:
+        - TASK: ...
+          INPUT: ...
+          ACTION: ...
+          OUTPUT: ...
+          SYSTEMS: ...
+          FREQUENCY_SIGNAL: ...
+          SOURCE_URL: https://...
+        BUDGET_SIGNALS:
+        - ...
+          SOURCE_URL: https://...
+        JUDGMENT/EXCEPTIONS: ...
         KILL: YES|NO — reason
-        RULE: Never invent a task, system, salary, or source.
+        RULE: Never invent a task, system, salary, frequency, or URL.
+      width: 460
+
+    - id: website_process
+      name: "Evidence 2: company workflow"
+      type: research
+      output_format: text
+      max_steps: 4
+      prompt: |-
+        ROLE: Cross-check the alleged workflow using the company's own public web presence.
+        COMPANY: {company}
+        WEBSITE: {website}
+        JOB EVIDENCE: {manual_work}
+        TASK:
+        1. Use the official company website/public docs first.
+        2. Look for how the relevant work enters the business: forms, email, WhatsApp, booking pages, customer/vendor portals, uploads, quotes, orders, support tickets, scheduling, status checks, or published operating instructions.
+        3. Record only facts that corroborate or contradict the job evidence.
+        4. Include an exact URL for every fact.
+        5. If no independent corroboration exists, say NONE. Do not turn absence into proof.
+        FORMAT:
+        WEBSITE_EVIDENCE:
+        - FACT: ...
+          SOURCE_URL: https://...
+        CONTRADICTIONS: ...
+        INDEPENDENT_CORROBORATION: YES|NO
       width: 420
+
+    - id: feasibility
+      name: "Feasibility proof"
+      type: research
+      output_format: text
+      max_steps: 4
+      prompt: |-
+        ROLE: Automation feasibility investigator. You are trying to falsify the automation idea.
+        COMPANY: {company}
+        JOB EVIDENCE: {manual_work}
+        WEBSITE EVIDENCE: {website_process}
+        TASK:
+        1. Identify only the systems/interfaces actually named or evidenced above.
+        2. For each relevant system, look for an official API, webhook, import/export, documented integration, or another deterministic interface. Prefer official docs.
+        3. If no API/integration exists but the work is clearly performed in a browser UI, mark BROWSER_AUTOMATION as a fallback, not as proof of reliability.
+        4. State an objective acceptance test for the proposed normal-path automation.
+        5. Call out irreversible/high-risk actions that require a human gate.
+        6. If no credible technical path exists, mark NONE.
+        FORMAT:
+        AUTOMATION_PATHS:
+        - PATH: API|WEBHOOK|INTEGRATION|RPA|BROWSER_AUTOMATION|DOCUMENT_AI
+          SYSTEM: ...
+          EVIDENCE: ...
+          SOURCE_URL: https://...
+        ACCEPTANCE_TEST: ...
+        RISK: LOW|MEDIUM|HIGH — reason
+        FEASIBLE: YES|NO
+      width: 440
+
+    - id: opportunity_evidence
+      name: Normalized opportunity evidence
+      type: ai_formula
+      output_format: json
+      prompt: |-
+        ROLE: Normalize evidence. Do not improve, score, or embellish it.
+        JOB/HIRING SIGNALS: {hiring_signals}
+        JOB EVIDENCE: {manual_work}
+        WEBSITE EVIDENCE: {website_process}
+        FEASIBILITY EVIDENCE: {feasibility}
+        TASK: Return one JSON object using ONLY facts/URLs above:
+        {
+          "manual_tasks": [
+            {
+              "task": "...",
+              "input": "...",
+              "output": "...",
+              "systems": ["..."],
+              "frequency_signal": "...",
+              "source_url": "https://..."
+            }
+          ],
+          "website_evidence": [
+            {"fact": "...", "source_url": "https://..."}
+          ],
+          "budget_signals": [
+            {"kind": "salary|headcount|urgency|other", "value": "...", "source_url": "https://..."}
+          ],
+          "automation_paths": ["api|webhook|integration|rpa|browser|document-ai"],
+          "acceptance_test": {"possible": true, "metric": "..."},
+          "frequency_signal": "high|medium|low|unknown",
+          "systems": ["..."],
+          "risk_level": "low|medium|high|unknown",
+          "judgment_level": "low|medium|high|unknown",
+          "physical_only": false,
+          "relationship_heavy": false,
+          "evidence_kill": false,
+          "source_urls": ["https://..."]
+        }
+        HARD RULES:
+        - A URL may appear only if it was present in the supplied evidence.
+        - If evidence is missing, use empty arrays / "unknown" / false; never fill gaps from general knowledge.
+        - automation_paths must be empty when feasibility evidence says NONE/NO.
+        - evidence_kill=true if job evidence says KILL, feasibility says NO/NONE, or the company match is doubtful.
+        - physical_only=true when the evidenced task cannot be completed primarily in digital systems.
+      width: 460
 
     - id: automation_score
       name: Automation value (0-100)
-      type: ai_formula
-      output_format: number
-      prompt: |-
-        ROLE: You are evaluating a service opportunity, not trying to justify automation.
-        EVIDENCE: {manual_work}
-        TASK: Score 0-100 using ONLY the evidence above.
-        RUBRIC:
-        - 0-30: work is repetitive and rule-like.
-        - 0-25: work happens inside digital systems/browser/spreadsheets and has structured inputs/outputs.
-        - 0-20: public hiring/salary/headcount evidence proves budget or urgency.
-        - 0-15: result can be acceptance-tested objectively and mistakes are reversible.
-        - 0-10: likely buyer is reachable in a small/mid-sized company.
-        HARD KILL: If evidence says KILL: YES, score 0-25.
-        FORMAT: Output ONLY one integer 0-100.
-        FALLBACK: If evidence is insufficient, output 0.
+      type: formula
+      formula: "automation_score({opportunity_evidence})"
       width: 150
+
+    - id: mechanism
+      name: Best mechanism
+      type: formula
+      formula: "automation_mechanism({opportunity_evidence})"
+      width: 160
+
+    - id: qualification_gate
+      name: Qualification gate
+      type: formula
+      formula: "automation_gate({opportunity_evidence})"
+      width: 150
+
+    - id: pilot_spec
+      name: Paid pilot / demo spec
+      type: ai_formula
+      output_format: text
+      condition: '{qualification_gate} == "PASS"'
+      prompt: |-
+        ROLE: Design a tiny, verifiable automation pilot from evidence only.
+        COMPANY: {company}
+        EVIDENCE: {opportunity_evidence}
+        MECHANISM: {mechanism}
+        TASK:
+        - Pick ONE normal-path task.
+        - Describe a 15-30 minute customer demonstration: what the employee should show once, using test/read-only data first.
+        - State the input, expected output, exceptions that remain human, acceptance test, and stop conditions.
+        - Never propose unattended consequential writes in the first demo.
+        FORMAT:
+        DEMO_TASK: ...
+        SHOW_ONCE: ...
+        INPUT: ...
+        EXPECTED_OUTPUT: ...
+        HUMAN_EXCEPTIONS: ...
+        ACCEPTANCE_TEST: ...
+        STOP_IF: ...
+      width: 400
 
     - id: contact
       name: Decision maker
       type: waterfall
       target_field: contact_person
       waterfall: [deep_scraper, crosslinked, decision_maker, staffspy, apollo_io]
+      condition: '{qualification_gate} == "PASS"'
       width: 200
 
     - id: title
@@ -113,6 +252,7 @@ workbook:
       type: waterfall
       target_field: contact_title
       waterfall: [deep_scraper, crosslinked, decision_maker, staffspy, apollo_io]
+      condition: '{qualification_gate} == "PASS"'
       width: 170
 
     - id: email
@@ -128,24 +268,27 @@ workbook:
         - mailscout
         - apollo_io
       verify: true
-      condition: '{email} == ""'
+      condition: '{qualification_gate} == "PASS" AND {email} == ""'
       width: 220
 
     - id: opener
       name: Evidence-led opener
       type: ai_formula
       output_format: text
+      condition: '{qualification_gate} == "PASS"'
       prompt: |-
         ROLE: Write like a normal technical founder sending a short first message.
-        CONTEXT: {contact_person} — {contact_title} at {company}. Evidence: {manual_work}.
-        TASK: Mention ONE concrete repetitive task visible in their public vacancy and ask whether it is still done manually. Do not pitch AI, CRM, automation platforms, audits, or a meeting.
+        CONTEXT: {contact} — {title} at {company}.
+        EVIDENCE: {opportunity_evidence}
+        TASK: Mention ONE concrete repetitive task that their own public evidence shows and ask whether it is still done manually. Do not claim savings, do not pitch "AI", and do not invent implementation details.
         FORMAT: 1-2 short sentences, max 35 words.
-        FALLBACK: If there is no concrete task or contact, output INSUFFICIENT_DATA.
-      width: 320
+        FALLBACK: If there is no concrete cited task or contact, output INSUFFICIENT_DATA.
+      width: 340
 
     # Configure destination_config.crm_type=attio (or another CRM) after import.
     - id: save
       name: Save qualified buyer
       type: output
       destination: crm
+      condition: '{qualification_gate} == "PASS"'
       width: 170
