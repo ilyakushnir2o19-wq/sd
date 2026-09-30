@@ -1,0 +1,151 @@
+# Opportunity Hunter — turn public hiring spend into automation prospects.
+slug: manual-ops-arbitrage
+name: "Manual-ops arbitrage → buyers → CRM"
+description: >-
+  Find companies paying people to do repetitive digital operations, extract
+  evidence from live job postings, score whether the work is realistically
+  automatable, then find a decision maker and verified contact.
+category: research
+icon: scan-search
+workbook:
+  description: >-
+    A vacancy is a public budget signal. This recipe starts with companies
+    actively hiring operations/admin/data-entry/procurement staff, verifies the
+    actual manual workflow from public evidence, kills weak targets, and only
+    then finds the buyer. Configure your CRM destination after import.
+  columns:
+    - id: src_manual_ops
+      name: "Source: companies hiring manual ops"
+      type: source
+      icp:
+        description: >-
+          Companies actively hiring for repetitive digital operations roles:
+          order entry, operations coordinator, data entry, procurement admin,
+          vendor portal, inventory admin, ecommerce operations, back office,
+          reporting, document processing, or similar computer-based work.
+        industry: "any"
+        keywords_any:
+          - order entry
+          - operations coordinator
+          - data entry
+          - procurement administrator
+          - vendor portal
+          - inventory coordinator
+          - ecommerce operations
+          - back office
+          - reporting
+          - document processing
+      channels:
+        categories: [jobs]
+      target_rows: 200
+
+    - id: company
+      name: Company
+      type: lead_field
+      lead_field: company
+      width: 200
+
+    - id: website
+      name: Website
+      type: lead_field
+      lead_field: website
+      width: 200
+
+    - id: hiring
+      name: Hiring evidence
+      type: waterfall
+      target_field: hiring_signals
+      waterfall: [ats_hiring, jobspy]
+      width: 260
+
+    - id: manual_work
+      name: Manual workflow evidence
+      type: research
+      output_format: text
+      max_steps: 5
+      prompt: |-
+        ROLE: You investigate whether a company is currently paying a person to do repetitive digital work.
+        CONTEXT: Company: {company}. Website: {website}. Hiring signals: {hiring_signals}.
+        TASK:
+        1. Find a current or recent job posting from this company.
+        2. Extract ONLY concrete duties that repeat in software, websites, spreadsheets, email, documents, portals, CRM/ERP, or reporting tools.
+        3. Name any systems/tools explicitly mentioned.
+        4. Capture salary/rate/headcount or another budget signal when published.
+        5. Include the source URL.
+        6. If the role is mainly physical work, relationship work, creative judgment, management, or evidence is weak, mark KILL.
+        FORMAT: One compact block:
+        TASKS: ...
+        SYSTEMS: ...
+        BUDGET: ...
+        SOURCE: ...
+        KILL: YES|NO — reason
+        RULE: Never invent a task, system, salary, or source.
+      width: 420
+
+    - id: automation_score
+      name: Automation value (0-100)
+      type: ai_formula
+      output_format: number
+      prompt: |-
+        ROLE: You are evaluating a service opportunity, not trying to justify automation.
+        EVIDENCE: {manual_work}
+        TASK: Score 0-100 using ONLY the evidence above.
+        RUBRIC:
+        - 0-30: work is repetitive and rule-like.
+        - 0-25: work happens inside digital systems/browser/spreadsheets and has structured inputs/outputs.
+        - 0-20: public hiring/salary/headcount evidence proves budget or urgency.
+        - 0-15: result can be acceptance-tested objectively and mistakes are reversible.
+        - 0-10: likely buyer is reachable in a small/mid-sized company.
+        HARD KILL: If evidence says KILL: YES, score 0-25.
+        FORMAT: Output ONLY one integer 0-100.
+        FALLBACK: If evidence is insufficient, output 0.
+      width: 150
+
+    - id: contact
+      name: Decision maker
+      type: waterfall
+      target_field: contact_person
+      waterfall: [deep_scraper, crosslinked, decision_maker, staffspy, apollo_io]
+      width: 200
+
+    - id: title
+      name: Title
+      type: waterfall
+      target_field: contact_title
+      waterfall: [deep_scraper, crosslinked, decision_maker, staffspy, apollo_io]
+      width: 170
+
+    - id: email
+      name: Email
+      type: waterfall
+      target_field: email
+      waterfall:
+        - deep_scraper
+        - jsonld_firmographics
+        - website_scraper
+        - email_harvester
+        - ddg_email
+        - mailscout
+        - apollo_io
+      verify: true
+      condition: '{email} == ""'
+      width: 220
+
+    - id: opener
+      name: Evidence-led opener
+      type: ai_formula
+      output_format: text
+      prompt: |-
+        ROLE: Write like a normal technical founder sending a short first message.
+        CONTEXT: {contact_person} — {contact_title} at {company}. Evidence: {manual_work}.
+        TASK: Mention ONE concrete repetitive task visible in their public vacancy and ask whether it is still done manually. Do not pitch AI, CRM, automation platforms, audits, or a meeting.
+        FORMAT: 1-2 short sentences, max 35 words.
+        FALLBACK: If there is no concrete task or contact, output INSUFFICIENT_DATA.
+      width: 320
+
+    # Configure destination_config.crm_type=attio (or another CRM) after import.
+    - id: save
+      name: Save qualified buyer
+      type: output
+      destination: crm
+      width: 170
