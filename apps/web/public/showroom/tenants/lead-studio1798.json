@@ -1,0 +1,57 @@
+{
+  "slug": "lead-studio1798",
+  "name": "STUDIO 1798",
+  "shortName": "1798",
+  "category": "Детейлинг · Екатеринбург",
+  "city": "Екатеринбург",
+  "phone": "+79655001798",
+  "address": "Екатеринбург, Кислородная, 7",
+  "accent": "#D74747",
+  "hero": "https://cdn4.telesco.pe/file/dskmjgk9bXBvro9dT8_rdNGX0U3jxq0K0XS5R9atNbmYPknxKl1NmVWA2H9pQK0r2fk3FvBTxWDmKWu1WQiSF-p-orr0ylsKQFoiuZWZSVU4rEq9m8qQvlBnvIbwK6LFcwn46H7Aq2F5Mgy_oKYL-Of3XPKOh1K_L5QUxWc18J-QHFsQ1pTqAjZgXqr99CDMclng4W17-AnYRjPUNOd2otEYMvt7QWuN5dcltgApfZg5up3IEOduIH_nqO2q0GMfm92Jf0-7R4UG_CW_zKWyR1KVhHvRLzcgu1MAgg_XDrHqB_8GQflC02EvoJBWbYIkPHDfNsAF1pvHAGDXNW5V7g.jpg",
+  "appDescription": "Детейлинг и защита авто в Екатеринбурге и Берёзовском",
+  "metric2Value": "2",
+  "metric2Label": "локации",
+  "priceFrom": 20000,
+  "priceCaption": "спецпредложение",
+  "bookingTitle": "Запись в удобную локацию",
+  "bookingCopy": "Клиент выбирает услугу и точку — заявка сразу приходит менеджеру.",
+  "tgContact": "@Studio1798",
+  "sourceChannel": "@std1798",
+  "services": [
+    {
+      "id": "doors",
+      "name": "Шумоизоляция дверей",
+      "duration": "по записи",
+      "price": 20000,
+      "note": "спецпредложение"
+    },
+    {
+      "id": "wheels",
+      "name": "Шумоизоляция колёсного пространства",
+      "duration": "по записи",
+      "price": 20000,
+      "note": "спецпредложение"
+    },
+    {
+      "id": "wrap",
+      "name": "Зоны риска PPF",
+      "duration": "по расчёту",
+      "priceLabel": "по запросу",
+      "note": "защита"
+    },
+    {
+      "id": "polish",
+      "name": "Полировка + керамика",
+      "duration": "по записи",
+      "priceLabel": "по запросу",
+      "note": "кузов"
+    }
+  ],
+  "gallery": [
+    {
+      "src": "https://cdn4.telesco.pe/file/dskmjgk9bXBvro9dT8_rdNGX0U3jxq0K0XS5R9atNbmYPknxKl1NmVWA2H9pQK0r2fk3FvBTxWDmKWu1WQiSF-p-orr0ylsKQFoiuZWZSVU4rEq9m8qQvlBnvIbwK6LFcwn46H7Aq2F5Mgy_oKYL-Of3XPKOh1K_L5QUxWc18J-QHFsQ1pTqAjZgXqr99CDMclng4W17-AnYRjPUNOd2otEYMvt7QWuN5dcltgApfZg5up3IEOduIH_nqO2q0GMfm92Jf0-7R4UG_CW_zKWyR1KVhHvRLzcgu1MAgg_XDrHqB_8GQflC02EvoJBWbYIkPHDfNsAF1pvHAGDXNW5V7g.jpg",
+      "title": "Toyota Camry",
+      "meta": "восстановление + PPF"
+    }
+  ]
+}
