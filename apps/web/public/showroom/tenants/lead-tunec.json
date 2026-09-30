@@ -1,0 +1,57 @@
+{
+  "slug": "lead-tunec",
+  "name": "Тунец Детейлинг",
+  "shortName": "ТУНЕЦ",
+  "category": "Детейлинг · Москва",
+  "city": "Москва",
+  "phone": "+79999851505",
+  "address": "Москва, ул. Перекопская, 34к2",
+  "accent": "#F07A3D",
+  "hero": "https://cdn4.telesco.pe/file/XJa7b_-Y_QWyj5l76VHA05lMaOCjyeespwRxIlguNKK-kplfALt2MAwX--Y0d30r4ISZR19Pz11mUaTslcIGwLvpKQQHrHaLjONiPhXHYsUgcw7KrZE5sUcZOv4C6EdmWCo2FkAtzbO666NOHJsLdFdmcuh_IkCGdkufqWURjjso7MGFlxAR5DxmhTi27ruXDyCt5KU8sFNAk-JUKUJvkYV8vxh5YpltcZWjk33iR4a5UaP8FQS3SylFE3fErYVIzqWgVko5BS5v37IxTuUrqddWV2DQr_-TTsZNU99pDi0WMAdmhOaSQsHJCF8-M0FCMog6PhGX56J8iPDRaCqDbw.jpg",
+  "appDescription": "Оклейка, полировка, кастом и восстановление — запись в одном приложении",
+  "metric2Value": "ЮЗАО",
+  "metric2Label": "Москва",
+  "priceLabel": "расчёт в чате",
+  "priceCaption": "по автомобилю",
+  "bookingTitle": "Шик, блеск — и удобная запись",
+  "bookingCopy": "Клиент выбирает направление и отправляет машину/время одним действием.",
+  "tgContact": "@ruslanburo",
+  "sourceChannel": "@tunecx",
+  "services": [
+    {
+      "id": "wrap",
+      "name": "Оклейка плёнкой",
+      "duration": "по расчёту",
+      "priceLabel": "по запросу",
+      "note": "защита / цвет"
+    },
+    {
+      "id": "polish",
+      "name": "Полировка",
+      "duration": "по записи",
+      "priceLabel": "по запросу",
+      "note": "кузов"
+    },
+    {
+      "id": "custom",
+      "name": "Кастомизация",
+      "duration": "по проекту",
+      "priceLabel": "по запросу",
+      "note": "индивидуально"
+    },
+    {
+      "id": "restore",
+      "name": "Восстановление",
+      "duration": "по осмотру",
+      "priceLabel": "по запросу",
+      "note": "детали / кузов"
+    }
+  ],
+  "gallery": [
+    {
+      "src": "https://cdn4.telesco.pe/file/XJa7b_-Y_QWyj5l76VHA05lMaOCjyeespwRxIlguNKK-kplfALt2MAwX--Y0d30r4ISZR19Pz11mUaTslcIGwLvpKQQHrHaLjONiPhXHYsUgcw7KrZE5sUcZOv4C6EdmWCo2FkAtzbO666NOHJsLdFdmcuh_IkCGdkufqWURjjso7MGFlxAR5DxmhTi27ruXDyCt5KU8sFNAk-JUKUJvkYV8vxh5YpltcZWjk33iR4a5UaP8FQS3SylFE3fErYVIzqWgVko5BS5v37IxTuUrqddWV2DQr_-TTsZNU99pDi0WMAdmhOaSQsHJCF8-M0FCMog6PhGX56J8iPDRaCqDbw.jpg",
+      "title": "Jet Green",
+      "meta": "полный цикл детейлинга"
+    }
+  ]
+}
