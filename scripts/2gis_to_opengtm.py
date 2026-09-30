@@ -24,12 +24,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-import requests
-
-from apps.api.services.leadgen.twogis import normalize_2gis_rows
-
-
-BATCH_SIZE = 500
+from apps.api.services.leadgen.twogis import ingest_2gis_rows, normalize_2gis_rows
 
 
 def _load(path: Path) -> list[dict[str, Any]]:
@@ -42,71 +37,6 @@ def _load(path: Path) -> list[dict[str, Any]]:
     if not isinstance(data, list):
         raise ValueError("2GIS input must be a JSON array (or an object with rows/items/results/data)")
     return [row for row in data if isinstance(row, dict)]
-
-
-def _chunks(rows: list[dict[str, Any]], size: int = BATCH_SIZE):
-    for i in range(0, len(rows), size):
-        yield i // size, rows[i:i + size]
-
-
-def _base_url(value: str) -> str:
-    return (value or "").strip().rstrip("/")
-
-
-def ingest(
-    rows: list[dict[str, Any]],
-    *,
-    opengtm_url: str,
-    workbook_id: str,
-    token: str,
-    source_fingerprint: str,
-    timeout: float = 30.0,
-) -> dict[str, Any]:
-    if not rows:
-        return {"added": 0, "skipped_duplicates": 0, "batches": 0}
-
-    base = _base_url(opengtm_url)
-    if not base or not workbook_id or not token:
-        raise ValueError("OPENGTM_URL, workbook id and ingest token are all required")
-
-    endpoint = f"{base}/api/v2/workbooks/{workbook_id}/rows/ingest"
-    totals = {
-        "added": 0,
-        "skipped_duplicates": 0,
-        "skipped_empty": 0,
-        "batches": 0,
-        "total_rows": None,
-        "unmapped_keys": set(),
-    }
-
-    for batch_idx, batch in _chunks(rows):
-        idem = f"2gis-{source_fingerprint[:32]}-{batch_idx}"
-        response = requests.post(
-            endpoint,
-            headers={
-                "Authorization": f"Bearer {token}",
-                "Idempotency-Key": idem,
-                "Content-Type": "application/json",
-                "User-Agent": "OpenGTM-2GIS-Bridge/1.0",
-            },
-            json={"rows": batch, "dedupe": True},
-            timeout=timeout,
-        )
-        if response.status_code >= 400:
-            body = response.text[:500]
-            raise RuntimeError(
-                f"OpenGTM ingest failed: HTTP {response.status_code}: {body}"
-            )
-        payload = response.json()
-        totals["added"] += int(payload.get("added") or 0)
-        totals["skipped_duplicates"] += int(payload.get("skipped_duplicates") or 0)
-        totals["skipped_empty"] += int(payload.get("skipped_empty") or 0)
-        totals["batches"] += 1
-        totals["total_rows"] = payload.get("total_rows")
-        totals["unmapped_keys"].update(payload.get("unmapped_keys") or [])
-
-    totals["unmapped_keys"] = sorted(totals["unmapped_keys"])
-    return totals
 
 
 def main() -> int:
@@ -157,7 +87,7 @@ def main() -> int:
         return 0
 
     fingerprint = hashlib.sha256(raw_bytes).hexdigest()
-    result = ingest(
+    result = ingest_2gis_rows(
         normalized,
         opengtm_url=args.opengtm_url,
         workbook_id=args.workbook_id,
