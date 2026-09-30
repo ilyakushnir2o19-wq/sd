@@ -1,0 +1,57 @@
+{
+  "slug": "lead-glavmos",
+  "name": "ГЛАВМОСДЕТЕЙЛИНГ",
+  "shortName": "ГЛАВМОС",
+  "category": "Детейлинг · Москва",
+  "city": "Москва",
+  "phone": "+79261353935",
+  "address": "Москва, ул. Ташкентская, 28 стр. 1",
+  "accent": "#52C878",
+  "hero": "https://cdn4.telesco.pe/file/ICbQ_XCL9XaDNDsI7J0dcle_KfeoavEuET2vPRzgWbQ1fo5phHRYM8-oFg3xyBPm-4e4j_-7AwVE3z32TmzX_1Q9E9acC_LXgs_89Zz2HG0CKbmotsG1CmQB_SQjf1k4rgm706SDxFEnpqQFQHYU0lvY9QowSPZRlsyXBeBTC83GxFAzUblsa_Txo_-6_x5d3Cr4UxkXr1uMKUNTO_AfpgwHxRObz1LkE6oooxAN1fQ9M0L_L2ck8iyqBOiUjfKOoIlfum6GvTavdVk31j9uJwwH0EbgauT0d2KFx3084FHpVPxKDZerTZEq3BfLcXOe6hzY5HcxRB0qC1eelzOhOA.jpg",
+  "appDescription": "Оклейка, полировка и химчистка — запись в одном приложении",
+  "metric2Value": "TG",
+  "metric2Label": "запись @ignatiy7",
+  "priceLabel": "от 1 500 ₽",
+  "priceCaption": "по публичному прайсу",
+  "bookingTitle": "Запись без переписки в несколько сообщений",
+  "bookingCopy": "Клиент выбирает услугу и время, а вы получаете готовую заявку.",
+  "tgContact": "@ignatiy7",
+  "sourceChannel": "@glavmosdetailing77",
+  "services": [
+    {
+      "id": "wrap",
+      "name": "Оклейка автомобиля",
+      "duration": "по расчёту",
+      "priceLabel": "от 1 500 ₽",
+      "note": "PPF / винил"
+    },
+    {
+      "id": "polish",
+      "name": "Полировка кузова",
+      "duration": "по записи",
+      "priceLabel": "по запросу",
+      "note": "восстановительная"
+    },
+    {
+      "id": "ceramic",
+      "name": "Керамическое покрытие",
+      "duration": "по записи",
+      "price": 13000,
+      "note": "Ceramic Pro"
+    },
+    {
+      "id": "interior",
+      "name": "Химчистка салона",
+      "duration": "по записи",
+      "priceLabel": "по запросу",
+      "note": "салон"
+    }
+  ],
+  "gallery": [
+    {
+      "src": "https://cdn4.telesco.pe/file/ICbQ_XCL9XaDNDsI7J0dcle_KfeoavEuET2vPRzgWbQ1fo5phHRYM8-oFg3xyBPm-4e4j_-7AwVE3z32TmzX_1Q9E9acC_LXgs_89Zz2HG0CKbmotsG1CmQB_SQjf1k4rgm706SDxFEnpqQFQHYU0lvY9QowSPZRlsyXBeBTC83GxFAzUblsa_Txo_-6_x5d3Cr4UxkXr1uMKUNTO_AfpgwHxRObz1LkE6oooxAN1fQ9M0L_L2ck8iyqBOiUjfKOoIlfum6GvTavdVk31j9uJwwH0EbgauT0d2KFx3084FHpVPxKDZerTZEq3BfLcXOe6hzY5HcxRB0qC1eelzOhOA.jpg",
+      "title": "BMW X6",
+      "meta": "оклейка + полировка"
+    }
+  ]
+}
