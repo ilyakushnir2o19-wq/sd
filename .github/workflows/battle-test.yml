@@ -1,0 +1,56 @@
+name: Battle Test - Manual Ops Arbitrage
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/battle-test.yml"
+
+jobs:
+  hunt:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      APP_ENV: test
+      DATABASE_URL: sqlite:///data/data.db
+      YUPCHA_DB_INIT: create_all
+      RUN_INLINE_WORKER: "1"
+      STAFFSPY_ENABLED: "0"
+      TECH_STACK_WEBSITE_FETCH_ENABLED: "0"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade uv
+          uv sync --dev
+          mkdir -p data
+
+      - name: Collect public hiring signals
+        run: |
+          uv run python -m apps.api.cli collect "companies actively hiring for order processing, sales operations, order entry, ecommerce operations, procurement administration, vendor portal coordination, inventory administration, billing operations, or back-office roles where duties include customer portals, ERP, Excel, data entry, purchase orders, invoices, reporting, Shopify, EDI, or repeated document processing" --workspace battle-test
+
+      - name: Enrich and score
+        run: |
+          uv run python -m apps.api.cli enrich --limit 100 || true
+          uv run python -m apps.api.cli score || true
+
+      - name: Export leads
+        run: |
+          uv run python -m apps.api.cli export --format json --output data/battle-leads.json
+          uv run python -m apps.api.cli stats | tee data/battle-stats.txt
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("data/battle-leads.json")
+          data=json.loads(p.read_text()) if p.exists() else []
+          print("exported", len(data) if isinstance(data,list) else type(data).__name__)
+          print(json.dumps(data[:10] if isinstance(data,list) else data, indent=2)[:12000])
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: battle-test-results
+          path: |
+            data/battle-leads.json
+            data/battle-stats.txt
