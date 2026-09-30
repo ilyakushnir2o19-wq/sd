@@ -12,6 +12,8 @@ import re
 from typing import Any, Iterable
 from urllib.parse import urlparse
 
+import requests
+
 
 _SOCIAL_HOSTS = {
     "t.me", "telegram.me", "wa.me", "whatsapp.com", "vk.com", "ok.ru",
@@ -213,3 +215,79 @@ def normalize_2gis_rows(
         seen.add(identity)
         out.append(row)
     return out
+
+
+MAX_INGEST_BATCH = 500
+
+
+def ingest_2gis_rows(
+    rows: list[dict[str, Any]],
+    *,
+    opengtm_url: str,
+    workbook_id: str,
+    token: str,
+    source_fingerprint: str,
+    timeout: float = 30.0,
+) -> dict[str, Any]:
+    """Push normalized rows through the public workbook ingest contract.
+
+    Every batch receives a stable Idempotency-Key derived from the source file
+    fingerprint, so retrying the same 2GIS artifact cannot duplicate rows even
+    before the workbook's domain/company dedupe runs.
+    """
+    if not rows:
+        return {
+            "added": 0,
+            "skipped_duplicates": 0,
+            "skipped_empty": 0,
+            "batches": 0,
+            "total_rows": None,
+            "unmapped_keys": [],
+        }
+
+    base = (opengtm_url or "").strip().rstrip("/")
+    workbook_id = (workbook_id or "").strip()
+    token = (token or "").strip()
+    if not base or not workbook_id or not token:
+        raise ValueError("OpenGTM URL, workbook id and ingest token are required")
+
+    endpoint = f"{base}/api/v2/workbooks/{workbook_id}/rows/ingest"
+    totals: dict[str, Any] = {
+        "added": 0,
+        "skipped_duplicates": 0,
+        "skipped_empty": 0,
+        "batches": 0,
+        "total_rows": None,
+        "unmapped_keys": set(),
+    }
+
+    for offset in range(0, len(rows), MAX_INGEST_BATCH):
+        batch_index = offset // MAX_INGEST_BATCH
+        batch = rows[offset: offset + MAX_INGEST_BATCH]
+        idem = f"2gis-{source_fingerprint[:32]}-{batch_index}"
+        response = requests.post(
+            endpoint,
+            headers={
+                "Authorization": f"Bearer {token}",
+                "Idempotency-Key": idem,
+                "Content-Type": "application/json",
+                "User-Agent": "OpenGTM-2GIS-Bridge/1.0",
+            },
+            json={"rows": batch, "dedupe": True},
+            timeout=timeout,
+        )
+        if response.status_code >= 400:
+            raise RuntimeError(
+                f"OpenGTM ingest failed: HTTP {response.status_code}: "
+                f"{response.text[:500]}"
+            )
+        payload = response.json()
+        totals["added"] += int(payload.get("added") or 0)
+        totals["skipped_duplicates"] += int(payload.get("skipped_duplicates") or 0)
+        totals["skipped_empty"] += int(payload.get("skipped_empty") or 0)
+        totals["batches"] += 1
+        totals["total_rows"] = payload.get("total_rows")
+        totals["unmapped_keys"].update(payload.get("unmapped_keys") or [])
+
+    totals["unmapped_keys"] = sorted(totals["unmapped_keys"])
+    return totals
