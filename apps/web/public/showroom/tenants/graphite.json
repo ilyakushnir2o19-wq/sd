@@ -23,7 +23,7 @@
   "busySlots": [
     "13:00"
   ],
-  "hero": "https://images.unsplash.com/photo-1607860108855-64acf2078ed9?auto=format&fit=crop&w=1400&q=88",
+  "hero": "./assets/automotive-reference-hero.svg",
   "about": "Студия ухода за автомобилем: безопасная мойка, полировка, защитные покрытия и химчистка салона.",
   "routeNote": "12 минут от Москва-Сити",
   "galleryLabel": "последние проекты",
