@@ -13,6 +13,8 @@ on:
       - "apps/docs/src/content/docs/self-hosting/configuration.md"
       - "apps/api/services/templates/recipes/manual-ops-arbitrage.yaml"
       - "tests/test_template_gallery.py"
+      - "apps/api/services/queue_service.py"
+      - "tests/test_queue_load.py"
   workflow_dispatch:
 
 jobs:
@@ -26,7 +28,7 @@ jobs:
           python -m pip install --upgrade uv
           uv sync --dev
       - name: Run Opportunity Hunter contract tests
-        run: uv run pytest -q tests/test_attio_crm.py tests/test_template_gallery.py
+        run: uv run pytest -q tests/test_attio_crm.py tests/test_template_gallery.py tests/test_queue_load.py
 
       - name: Run full Python test suite
         run: uv run pytest -q
