@@ -265,9 +265,18 @@ class QueueService:
                 text(
                     "UPDATE jobs SET status = 'processing', started_at = :now, "
                     "last_heartbeat = :now, locked_at = :now, worker_id = :wid "
-                    "WHERE id = :id AND status = 'pending'"
+                    "WHERE id = :id AND status = 'pending' "
+                    "AND (workspace_id IS NULL OR :tenant_cap = 0 OR "
+                    "(SELECT COUNT(*) FROM jobs active "
+                    "WHERE active.status = 'processing' "
+                    "AND active.workspace_id = jobs.workspace_id) < :tenant_cap)"
                 ),
-                {"now": now, "wid": self.worker_id, "id": job_id},
+                {
+                    "now": now,
+                    "wid": self.worker_id,
+                    "id": job_id,
+                    "tenant_cap": self.max_active_per_workspace,
+                },
             )
             db.commit()
             if result.rowcount == 1:
