@@ -50,7 +50,7 @@ jobs:
         run: |
           rsync -a --delete \
             --exclude ".git/" \
-            --exclude ".github/workflows/bootstrap-opengtm.yml" \
+            --exclude ".github/workflows/" \
             "$RUNNER_TEMP/opengtm/" ./
           rm -f .env
           git config user.name "OpenGTM Mirror Bot"
