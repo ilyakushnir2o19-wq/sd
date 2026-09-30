@@ -1,0 +1,57 @@
+{
+  "slug": "lead-proservice",
+  "name": "Pro-Service",
+  "shortName": "PRO-SERVICE",
+  "category": "Тюнинг · Детейлинг · Москва",
+  "city": "Москва",
+  "phone": "+74957724475",
+  "address": "Москва, ул. Константинова, 11А",
+  "accent": "#E23939",
+  "hero": "https://cdn4.telesco.pe/file/nF5dSwRulQhqhImlzJaS2KK3YoBN_KsMaB3YVgfPGQyrGK0ocCN7FMuNjeanVBHWajKK0C1fh5WbOvwj2FGhYM7WPkM8yz-XxNEHxdE8HJ2bKenuvZHeDY1kqHK2tAvm78X7Cq9mcUVksYFO1AG0vivwC5oFLxp05qElr77dI18tf4gfkA3PqtBESZ_sjLDDm5cgMX1RhUqEluRqB0NnPbMyP_wdHqYfhr_M-az5S90dqkY2oqkdDXlRNJ0igYVp29wI6zhSlffUmpFLOks9P0O65D55DEJ0Xb8GUai9CyFSjoLGauClUf_f9OnLzGpYgvkMa7_8lFpaYCf09U5-2A.jpg",
+  "appDescription": "Детейлинг, оклейка и тюнинг — клиентская запись в одном интерфейсе",
+  "metric2Value": "2009",
+  "metric2Label": "работаем с",
+  "priceFrom": 3500,
+  "priceCaption": "детейлинг",
+  "bookingTitle": "Запись на детейлинг без звонка",
+  "bookingCopy": "Услуга, автомобиль и удобное время — в одной заявке.",
+  "tgContact": "@pro_serviceMSK",
+  "sourceChannel": "@pro_service",
+  "services": [
+    {
+      "id": "care",
+      "name": "Детейлинг-уход",
+      "duration": "по записи",
+      "price": 5000,
+      "note": "кузов + салон"
+    },
+    {
+      "id": "interior",
+      "name": "Детейлинг салона",
+      "duration": "по записи",
+      "price": 3500,
+      "note": "уборка салона"
+    },
+    {
+      "id": "polish",
+      "name": "Мягкая полировка",
+      "duration": "по записи",
+      "price": 20000,
+      "note": "от"
+    },
+    {
+      "id": "detail",
+      "name": "Защитное покрытие Detail",
+      "duration": "по записи",
+      "price": 35000,
+      "note": "от"
+    }
+  ],
+  "gallery": [
+    {
+      "src": "https://cdn4.telesco.pe/file/nF5dSwRulQhqhImlzJaS2KK3YoBN_KsMaB3YVgfPGQyrGK0ocCN7FMuNjeanVBHWajKK0C1fh5WbOvwj2FGhYM7WPkM8yz-XxNEHxdE8HJ2bKenuvZHeDY1kqHK2tAvm78X7Cq9mcUVksYFO1AG0vivwC5oFLxp05qElr77dI18tf4gfkA3PqtBESZ_sjLDDm5cgMX1RhUqEluRqB0NnPbMyP_wdHqYfhr_M-az5S90dqkY2oqkdDXlRNJ0igYVp29wI6zhSlffUmpFLOks9P0O65D55DEJ0Xb8GUai9CyFSjoLGauClUf_f9OnLzGpYgvkMa7_8lFpaYCf09U5-2A.jpg",
+      "title": "G63",
+      "meta": "матовая защитная плёнка"
+    }
+  ]
+}
