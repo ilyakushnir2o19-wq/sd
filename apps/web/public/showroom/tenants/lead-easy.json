@@ -1,0 +1,57 @@
+{
+  "slug": "lead-easy",
+  "name": "EasyDetailing",
+  "shortName": "EASY",
+  "category": "Детейлинг · Санкт-Петербург",
+  "city": "Санкт-Петербург",
+  "phone": "+79213535393",
+  "address": "Санкт-Петербург, Старообрядческая, 10",
+  "accent": "#65B96A",
+  "hero": "https://cdn4.telesco.pe/file/KjiAJJHXDMygK8_Ryma3LIBsFEHt3h0lhWBI5lFfxgIWL8SmDaZO-fv5TgvaVXmIvUg-RnDa0pOS87xLuAfFEwG57eTQj3IfjECsO8Ei7O3dXr4H-ZCed3x5apkKXac8wVs9tGvLAPOYbVpZl0c9GvdROn31ipcuTRcYtLgK9ikSaRAzkRPO_QUtVeJmUs50X9e54MQGLuAPy0F4sdxpjDtBU2qmYOVjl-Zff-W-ASQZ8PqGwifwKt8BYbv61BqGKQ73yn9Qew_aWRZK5HoEts00dCAtG4sHy_8g6l227ZG_gEGim47jrxHHskCX54YdYLE6r0SlFzMb46NP_5ET1w.jpg",
+  "appDescription": "Полировка, химчистка, оклейка и детейлинг самообслуживания",
+  "metric2Value": "850 ₽",
+  "metric2Label": "самообслуживание / час",
+  "priceFrom": 850,
+  "priceCaption": "публичная цена",
+  "bookingTitle": "Выбрать формат и время заранее",
+  "bookingCopy": "Самообслуживание или работа мастера — клиент сразу понимает, куда записывается.",
+  "tgContact": "@easy_detail",
+  "sourceChannel": "@easydetail",
+  "services": [
+    {
+      "id": "self",
+      "name": "Детейлинг самообслуживания",
+      "duration": "1 час",
+      "price": 850,
+      "note": "час"
+    },
+    {
+      "id": "headlight",
+      "name": "Реставрация фар + плёнка",
+      "duration": "по записи",
+      "price": 5000,
+      "note": "публичный кейс"
+    },
+    {
+      "id": "polish",
+      "name": "Лёгкая полировка",
+      "duration": "по записи",
+      "price": 13500,
+      "note": "акционная цена"
+    },
+    {
+      "id": "ceramic",
+      "name": "Полировка + керамика",
+      "duration": "2–3 дня",
+      "price": 18000,
+      "note": "публичный кейс"
+    }
+  ],
+  "gallery": [
+    {
+      "src": "https://cdn4.telesco.pe/file/KjiAJJHXDMygK8_Ryma3LIBsFEHt3h0lhWBI5lFfxgIWL8SmDaZO-fv5TgvaVXmIvUg-RnDa0pOS87xLuAfFEwG57eTQj3IfjECsO8Ei7O3dXr4H-ZCed3x5apkKXac8wVs9tGvLAPOYbVpZl0c9GvdROn31ipcuTRcYtLgK9ikSaRAzkRPO_QUtVeJmUs50X9e54MQGLuAPy0F4sdxpjDtBU2qmYOVjl-Zff-W-ASQZ8PqGwifwKt8BYbv61BqGKQ73yn9Qew_aWRZK5HoEts00dCAtG4sHy_8g6l227ZG_gEGim47jrxHHskCX54YdYLE6r0SlFzMb46NP_5ET1w.jpg",
+      "title": "Range Rover",
+      "meta": "полировка + химчистка"
+    }
+  ]
+}
