@@ -130,16 +130,18 @@ function render() {
 
   const bayStat = node('div', 'stat-card')
   const bayHead = node('div', 'stat-head')
-  add(bayHead, icon('garage'), document.createTextNode(String(biz.baysInWork || 3)))
-  add(bayStat, bayHead, node('small', '', 'бокса в работе'))
+  add(bayHead, icon(biz.metric2Icon || 'garage'), document.createTextNode(String(biz.metric2Value || 'TG')))
+  add(bayStat, bayHead, node('small', '', biz.metric2Label || 'запись в чате'))
   add(stats, serviceStat, bayStat)
   screen.append(stats)
 
-  const minPrice = biz.priceFrom || Math.min(...biz.services.map(s => Number(s.price) || 0).filter(Boolean))
+  const numericPrices = biz.services.map(s => Number(s.price) || 0).filter(Boolean)
+  const minPrice = biz.priceFrom || (numericPrices.length ? Math.min(...numericPrices) : 0)
   const price = node('div', 'price-card')
   const priceMain = node('strong')
-  add(priceMain, icon('tag'), document.createTextNode('от ' + money(minPrice)))
-  add(price, priceMain, node('span', '', 'за услугу'))
+  const priceText = biz.priceLabel || (minPrice ? ('от ' + money(minPrice)) : 'расчёт в чате')
+  add(priceMain, icon('tag'), document.createTextNode(priceText))
+  add(price, priceMain, node('span', '', biz.priceCaption || 'за услугу'))
   screen.append(price)
 
   const booking = node('section', 'booking-section')
@@ -167,7 +169,7 @@ function render() {
     const row = node('button', 'service-row')
     const copy = node('div')
     add(copy, node('div', 'service-title', service.name), node('div', 'service-meta', service.duration + (service.note ? ' · ' + service.note : '')))
-    add(row, copy, node('div', 'service-price', money(service.price)))
+    add(row, copy, node('div', 'service-price', service.priceLabel || (Number(service.price) ? money(service.price) : 'по запросу')))
     row.onclick = () => openBooking(service.id)
     serviceList.append(row)
   })
@@ -263,7 +265,7 @@ function bookingSummary() {
   add(
     summary,
     copy,
-    node('span', '', selected.duration + ' · ' + money(selected.price))
+    node('span', '', selected.duration + ' · ' + (selected.priceLabel || (Number(selected.price) ? money(selected.price) : 'по запросу')))
   )
   return summary
 }
