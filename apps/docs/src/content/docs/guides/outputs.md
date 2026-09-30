@@ -18,7 +18,7 @@ the cell to re-push.
 | `destination` | `destination_config` | Credential |
 |---|---|---|
 | `webhook` | `url` (templated with `{Column}`), `method` (default `POST`), `headers`, `body` (template; JSON when it parses, otherwise raw text; defaults to the full row as JSON) | none |
-| `crm` | `crm_type`: `hubspot` or `salesforce`; `field_map`: `{lead_field: crm_property}` | `HUBSPOT_TOKEN`, or `SALESFORCE_INSTANCE_URL` + `SALESFORCE_ACCESS_TOKEN` |
+| `crm` | `crm_type`: `hubspot`, `salesforce`, or `attio`; `field_map`: `{lead_field: crm_property}` | `HUBSPOT_TOKEN`, `SALESFORCE_INSTANCE_URL` + `SALESFORCE_ACCESS_TOKEN`, or `ATTIO_API_TOKEN` |
 | `sheets` | `spreadsheet_id`, `range` (default `Sheet1`), `columns` (default company, email, phone, website, city) | `GOOGLE_SHEETS_TOKEN` |
 | `airtable` | `base_id`, `table`, `field_map` (default Company, Email, Phone, Website, City) | `AIRTABLE_TOKEN` |
 | `sequencer` | `sequence_id` of an OpenGTM outreach sequence | none |
@@ -29,7 +29,7 @@ Credentials resolve per workspace from **Settings → Integrations**, falling
 back to `.env`.
 
 CRM pushes send only the mapped fields and upsert by external id; a new
-record is a HubSpot contact or a Salesforce lead. Sequencer pushes enrol the
+record is a HubSpot contact, Salesforce lead, or Attio Person. Attio upserts People by the unique `email_addresses` attribute. Sequencer pushes enrol the
 row's email into the sequence and skip suppressed addresses. The cold-email
 destinations default to a `{email, first_name, last_name, company_name}` map.
 
