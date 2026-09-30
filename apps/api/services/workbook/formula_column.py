@@ -35,6 +35,21 @@ def _default(*args):
     return ""
 
 
+def _automation_score(value):
+    from apps.api.services.leadgen.enrichment.automation_opportunity import automation_score
+    return automation_score(value)
+
+
+def _automation_mechanism(value):
+    from apps.api.services.leadgen.enrichment.automation_opportunity import automation_mechanism
+    return automation_mechanism(value)
+
+
+def _automation_gate(value):
+    from apps.api.services.leadgen.enrichment.automation_opportunity import automation_gate
+    return automation_gate(value)
+
+
 _FUNCS = {
     "default": _default,
     "lower": lambda s: str(s).lower(),
@@ -49,6 +64,10 @@ _FUNCS = {
     "title": lambda s: str(s).title(),
     "replace": lambda s, a, b: str(s).replace(a, b),
     "concat": lambda *xs: "".join(str(x) for x in xs),
+    # Opportunity Hunter: deterministic verification over LLM-extracted evidence.
+    "automation_score": _automation_score,
+    "automation_mechanism": _automation_mechanism,
+    "automation_gate": _automation_gate,
 }
 
 # Whitelisted string methods callable on a value (e.g. {x}.split("@")).
