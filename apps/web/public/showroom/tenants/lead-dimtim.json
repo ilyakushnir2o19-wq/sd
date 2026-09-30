@@ -1,0 +1,57 @@
+{
+  "slug": "lead-dimtim",
+  "name": "ДимТим Детейлинг",
+  "shortName": "ДИМТИМ",
+  "category": "Детейлинг · Автомойка · Москва",
+  "city": "Москва",
+  "phone": "+79993361099",
+  "address": "Москва, ул. Василия Петушкова, 3к3 стр.1",
+  "accent": "#E6953C",
+  "hero": "https://cdn4.telesco.pe/file/RhBShru6eTIkpmo2dIEvRweTIvwiFIRGGo_Z16IaknBV-ctISu-O4MRaIowkqBtG16o4XH15tJDRkWTx7vo4YwaH5ml8OtpzyrRE9Q22qJAP6lVkOBWkpaR2evEeeuq3_brqTieXRTXOl1xs23SIEBaDO6sQTRm7mAohVUJQXEvgoMdH3ehYiEuFNqrbF5vsJTNHn-ZOGxrobLKAgGQ4VlBlcg6fdo-Nyk0TkUjH-TbtWWsaBYzhy4poG4xUv01m543_WVmddpRfmE5rN6TknlqUuEqkS4iN-fiFURlNqqIp8RGqr8m7M511dAw1MZ6qU-1u6VSfXJSrJEAfwvXGcw.jpg",
+  "appDescription": "Детейлинг и автомойка — запись клиента без звонка",
+  "metric2Value": "TG",
+  "metric2Label": "контакт @anastaslux",
+  "priceLabel": "расчёт в чате",
+  "priceCaption": "по автомобилю",
+  "bookingTitle": "Запись в ДимТим онлайн",
+  "bookingCopy": "Клиент выбирает услугу и время — остаётся только подтвердить заявку.",
+  "tgContact": "@anastaslux",
+  "sourceChannel": "ДимТим Детейлинг & Автомойка",
+  "services": [
+    {
+      "id": "wash",
+      "name": "Автомойка",
+      "duration": "по записи",
+      "priceLabel": "по запросу",
+      "note": "комплекс"
+    },
+    {
+      "id": "interior",
+      "name": "Химчистка салона",
+      "duration": "по записи",
+      "priceLabel": "по запросу",
+      "note": "салон"
+    },
+    {
+      "id": "polish",
+      "name": "Полировка кузова",
+      "duration": "по записи",
+      "priceLabel": "по запросу",
+      "note": "кузов"
+    },
+    {
+      "id": "protect",
+      "name": "Защитное покрытие",
+      "duration": "по записи",
+      "priceLabel": "по запросу",
+      "note": "кузов"
+    }
+  ],
+  "gallery": [
+    {
+      "src": "https://cdn4.telesco.pe/file/RhBShru6eTIkpmo2dIEvRweTIvwiFIRGGo_Z16IaknBV-ctISu-O4MRaIowkqBtG16o4XH15tJDRkWTx7vo4YwaH5ml8OtpzyrRE9Q22qJAP6lVkOBWkpaR2evEeeuq3_brqTieXRTXOl1xs23SIEBaDO6sQTRm7mAohVUJQXEvgoMdH3ehYiEuFNqrbF5vsJTNHn-ZOGxrobLKAgGQ4VlBlcg6fdo-Nyk0TkUjH-TbtWWsaBYzhy4poG4xUv01m543_WVmddpRfmE5rN6TknlqUuEqkS4iN-fiFURlNqqIp8RGqr8m7M511dAw1MZ6qU-1u6VSfXJSrJEAfwvXGcw.jpg",
+      "title": "ДимТим",
+      "meta": "детейлинг + мойка"
+    }
+  ]
+}
