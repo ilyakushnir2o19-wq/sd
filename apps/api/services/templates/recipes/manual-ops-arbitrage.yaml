@@ -71,7 +71,7 @@ workbook:
         ROLE: Evidence investigator. Your job is to prove or disprove that this company is paying a human to do repetitive digital work.
         COMPANY: {company}
         WEBSITE: {website}
-        HIRING SIGNALS: {hiring}
+        HIRING SIGNALS: {hiring_signals}
         TASK:
         1. Find a current/recent vacancy from THIS company. Prefer the exact URLs already present in hiring signals, then search public job boards/careers pages.
         2. Extract only duties that repeatedly transform digital INPUT into digital OUTPUT inside software, browser portals, spreadsheets, email, documents, CRM or ERP.
@@ -155,7 +155,7 @@ workbook:
       output_format: json
       prompt: |-
         ROLE: Normalize evidence. Do not improve, score, or embellish it.
-        JOB/HIRING SIGNALS: {hiring}
+        JOB/HIRING SIGNALS: {hiring_signals}
         JOB EVIDENCE: {manual_work}
         WEBSITE EVIDENCE: {website_process}
         FEASIBILITY EVIDENCE: {feasibility}
