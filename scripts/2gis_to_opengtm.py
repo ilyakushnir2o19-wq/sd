@@ -24,6 +24,13 @@ import sys
 from pathlib import Path
 from typing import Any
 
+# Running "python scripts/..." makes scripts/ sys.path[0], not the repository
+# root. Insert the root explicitly so the OpenGTM package is importable both
+# locally and on a bare GitHub Actions checkout.
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
 from apps.api.services.leadgen.twogis import ingest_2gis_rows, normalize_2gis_rows
 
 
