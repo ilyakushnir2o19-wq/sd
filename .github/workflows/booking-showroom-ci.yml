@@ -22,8 +22,27 @@ jobs:
       - uses: actions/checkout@v4
       - name: Validate tenant generator
         run: |
-          python -m pip install -q pytest
-          pytest -q tests/test_showroom_tenant.py
+          python -m compileall -q scripts/showroom_tenant.py
+          python - <<'PY'
+          from argparse import Namespace
+          from scripts.showroom_tenant import build_config, parse_service, slugify
+
+          assert slugify("GRAPHITE Detailing") == "graphite-detailing"
+          svc = parse_service("Замена масла|50 мин|2500 ₽|без стоимости масла", 2)
+          assert svc["id"] == "service-2" and svc["price"] == 2500
+          args = Namespace(
+              slug="demo", company="Demo Auto", short_name="DEMO",
+              category="Автосервис · Москва", phone="+79990000000",
+              address="Москва", hours="09:00–21:00", rating="4.9",
+              reviews_label="100 отзывов", accent="#c6ff38",
+              hero="https://example.com/hero.jpg", headline="Запись без звонка",
+              subheadline="Выберите время", ai_example="Нужна диагностика",
+              service=["Диагностика|45 мин|1800|ходовая"],
+          )
+          cfg = build_config(args)
+          assert cfg["name"] == "Demo Auto" and cfg["services"][0]["price"] == 1800
+          print("tenant generator ok")
+          PY
       - name: Validate showroom assets
         run: |
           node --check apps/web/public/showroom/app.js
