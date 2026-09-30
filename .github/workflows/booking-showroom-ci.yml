@@ -73,6 +73,7 @@ jobs:
           test "$(stat -c%s /tmp/voltage.png)" -gt 20000
 
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: premium-showroom-screens
           path: |
