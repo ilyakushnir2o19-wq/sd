@@ -4,6 +4,16 @@ on:
   push:
     paths:
       - ".github/workflows/full-verification.yml"
+      - "apps/api/services/crm/attio.py"
+      - "apps/api/services/workbook/output.py"
+      - "apps/api/routers/settings.py"
+      - "apps/api/services/queue_service.py"
+      - "apps/api/services/templates/recipes/manual-ops-arbitrage.yaml"
+      - "tests/test_attio_crm.py"
+      - "tests/test_template_gallery.py"
+      - "tests/test_queue_load.py"
+      - ".env.example"
+      - "apps/docs/**"
   workflow_dispatch:
 
 jobs:
