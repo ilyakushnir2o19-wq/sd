@@ -1,0 +1,29 @@
+name: Glavmos Pitch Review
+
+on:
+  push:
+    paths:
+      - "apps/web/public/pitches/glavmos/index.html"
+      - ".github/workflows/glavmos-pitch-review.yml"
+  workflow_dispatch:
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Render Glavmos at real phone scale
+        shell: bash
+        run: |
+          python -m http.server 8765 >/tmp/http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID || true' EXIT
+          sleep 1
+          CHROME="$(command -v google-chrome || command -v chromium || command -v chromium-browser)"
+          "$CHROME" --headless=new --no-sandbox --disable-gpu --virtual-time-budget=5000             --window-size=430,932             --screenshot=/tmp/glavmos-large.png             "http://127.0.0.1:8765/apps/web/public/pitches/glavmos/"
+          test "$(stat -c%s /tmp/glavmos-large.png)" -gt 20000
+      - uses: actions/upload-artifact@v4
+        with:
+          name: glavmos-large-review
+          path: /tmp/glavmos-large.png
