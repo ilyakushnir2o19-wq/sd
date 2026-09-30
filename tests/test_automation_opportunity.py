@@ -115,6 +115,12 @@ def test_high_risk_opportunity_requires_review_and_human_gate():
     assert "high_risk_requires_human_gate" in result["reasons"]
 
 
+def test_explicit_research_kill_cannot_be_overridden_by_other_signals():
+    result = score_opportunity_evidence(_strong_evidence(evidence_kill=True))
+    assert result["gate"] == "KILL"
+    assert "public_evidence_marked_kill" in result["reasons"]
+
+
 def test_formula_functions_expose_same_deterministic_contract():
     payload = json.dumps(_strong_evidence())
     row = {"evidence": payload}
