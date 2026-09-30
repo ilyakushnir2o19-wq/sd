@@ -1,6 +1,10 @@
 """2GIS bridge tests (offline)."""
 
-from apps.api.services.leadgen.twogis import normalize_2gis_row, normalize_2gis_rows
+from apps.api.services.leadgen.twogis import (
+    ingest_2gis_rows,
+    normalize_2gis_row,
+    normalize_2gis_rows,
+)
 
 
 def test_normalize_raw_2gis_row_to_hunter_fields():
@@ -96,3 +100,67 @@ def test_batch_dedupes_by_domain_then_company():
 
 def test_identity_less_rows_are_dropped():
     assert normalize_2gis_rows([{}, {"address": "nowhere"}]) == []
+
+
+class _Response:
+    def __init__(self, payload, status_code=200, text=""):
+        self._payload = payload
+        self.status_code = status_code
+        self.text = text
+
+    def json(self):
+        return self._payload
+
+
+def test_ingest_bridge_batches_and_uses_stable_idempotency(monkeypatch):
+    calls = []
+
+    def fake_post(url, headers, json, timeout):
+        calls.append((url, headers, json, timeout))
+        return _Response({
+            "added": len(json["rows"]),
+            "skipped_duplicates": 0,
+            "skipped_empty": 0,
+            "total_rows": sum(len(c[2]["rows"]) for c in calls),
+            "unmapped_keys": ["2gis_id"],
+        })
+
+    monkeypatch.setattr(
+        "apps.api.services.leadgen.twogis.requests.post",
+        fake_post,
+    )
+
+    rows = [{"company": f"Company {i}", "website": f"c{i}.example"} for i in range(501)]
+    result = ingest_2gis_rows(
+        rows,
+        opengtm_url="https://gtm.example/",
+        workbook_id="wb-123",
+        token="wbi_secret",
+        source_fingerprint="abcdef0123456789" * 4,
+    )
+
+    assert result["added"] == 501
+    assert result["batches"] == 2
+    assert result["unmapped_keys"] == ["2gis_id"]
+    assert calls[0][0] == "https://gtm.example/api/v2/workbooks/wb-123/rows/ingest"
+    assert len(calls[0][2]["rows"]) == 500
+    assert len(calls[1][2]["rows"]) == 1
+    assert calls[0][1]["Authorization"] == "Bearer wbi_secret"
+    assert calls[0][1]["Idempotency-Key"] == "2gis-abcdef0123456789abcdef0123456789-0"
+    assert calls[1][1]["Idempotency-Key"].endswith("-1")
+    assert calls[0][2]["dedupe"] is True
+
+
+def test_ingest_bridge_fails_closed_without_credentials():
+    try:
+        ingest_2gis_rows(
+            [{"company": "Acme"}],
+            opengtm_url="",
+            workbook_id="wb",
+            token="wbi_secret",
+            source_fingerprint="abc",
+        )
+    except ValueError as exc:
+        assert "required" in str(exc)
+    else:
+        raise AssertionError("missing OpenGTM URL must fail")
