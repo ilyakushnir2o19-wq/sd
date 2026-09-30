@@ -53,6 +53,18 @@ def test_catalog_has_at_least_15_recipes():
     assert len(RECIPES) >= 15
 
 
+def test_manual_ops_arbitrage_recipe_has_money_signal_pipeline():
+    recipe = get_recipe("manual-ops-arbitrage")
+    assert recipe is not None
+    columns = {col["id"]: col for col in recipe["workbook"]["columns"]}
+    assert columns["src_manual_ops"]["type"] == "source"
+    assert columns["manual_work"]["type"] == "research"
+    assert columns["automation_score"]["type"] == "ai_formula"
+    assert columns["contact"]["target_field"] == "contact_person"
+    assert columns["email"]["target_field"] == "email"
+    assert columns["save"]["destination"] == "crm"
+
+
 def test_slugs_unique():
     assert len(SLUGS) == len(set(SLUGS))
 
