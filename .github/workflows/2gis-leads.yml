@@ -1,0 +1,105 @@
+name: 2GIS Lead Hunt
+
+on:
+  push:
+    paths:
+      - ".github/workflows/2gis-leads.yml"
+  workflow_dispatch:
+
+jobs:
+  parse:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - city: moscow
+            urls: >-
+              https://2gis.ru/moscow/search/%D0%BE%D0%BF%D1%82%D0%BE%D0%B2%D1%8B%D0%B5%20%D0%BA%D0%BE%D0%BC%D0%BF%D0%B0%D0%BD%D0%B8%D0%B8 https://2gis.ru/moscow/search/%D0%B4%D0%B8%D1%81%D1%82%D1%80%D0%B8%D0%B1%D1%8C%D1%8E%D1%82%D0%BE%D1%80%D1%8B https://2gis.ru/moscow/search/%D0%B3%D1%80%D1%83%D0%B7%D0%BE%D0%BF%D0%B5%D1%80%D0%B5%D0%B2%D0%BE%D0%B7%D0%BA%D0%B8 https://2gis.ru/moscow/search/%D1%84%D1%83%D0%BB%D1%84%D0%B8%D0%BB%D0%BC%D0%B5%D0%BD%D1%82
+          - city: spb
+            urls: >-
+              https://2gis.ru/spb/search/%D0%BE%D0%BF%D1%82%D0%BE%D0%B2%D1%8B%D0%B5%20%D0%BA%D0%BE%D0%BC%D0%BF%D0%B0%D0%BD%D0%B8%D0%B8 https://2gis.ru/spb/search/%D0%B4%D0%B8%D1%81%D1%82%D1%80%D0%B8%D0%B1%D1%8C%D1%8E%D1%82%D0%BE%D1%80%D1%8B https://2gis.ru/spb/search/%D0%B3%D1%80%D1%83%D0%B7%D0%BE%D0%BF%D0%B5%D1%80%D0%B5%D0%B2%D0%BE%D0%B7%D0%BA%D0%B8 https://2gis.ru/spb/search/%D1%84%D1%83%D0%BB%D1%84%D0%B8%D0%BB%D0%BC%D0%B5%D0%BD%D1%82
+          - city: ekaterinburg
+            urls: >-
+              https://2gis.ru/ekaterinburg/search/%D0%BE%D0%BF%D1%82%D0%BE%D0%B2%D1%8B%D0%B5%20%D0%BA%D0%BE%D0%BC%D0%BF%D0%B0%D0%BD%D0%B8%D0%B8 https://2gis.ru/ekaterinburg/search/%D0%B4%D0%B8%D1%81%D1%82%D1%80%D0%B8%D0%B1%D1%8C%D1%8E%D1%82%D0%BE%D1%80%D1%8B https://2gis.ru/ekaterinburg/search/%D0%B3%D1%80%D1%83%D0%B7%D0%BE%D0%BF%D0%B5%D1%80%D0%B5%D0%B2%D0%BE%D0%B7%D0%BA%D0%B8 https://2gis.ru/ekaterinburg/search/%D1%84%D1%83%D0%BB%D1%84%D0%B8%D0%BB%D0%BC%D0%B5%D0%BD%D1%82
+          - city: kazan
+            urls: >-
+              https://2gis.ru/kazan/search/%D0%BE%D0%BF%D1%82%D0%BE%D0%B2%D1%8B%D0%B5%20%D0%BA%D0%BE%D0%BC%D0%BF%D0%B0%D0%BD%D0%B8%D0%B8 https://2gis.ru/kazan/search/%D0%B4%D0%B8%D1%81%D1%82%D1%80%D0%B8%D0%B1%D1%8C%D1%8E%D1%82%D0%BE%D1%80%D1%8B https://2gis.ru/kazan/search/%D0%B3%D1%80%D1%83%D0%B7%D0%BE%D0%BF%D0%B5%D1%80%D0%B5%D0%B2%D0%BE%D0%B7%D0%BA%D0%B8 https://2gis.ru/kazan/search/%D1%84%D1%83%D0%BB%D1%84%D0%B8%D0%BB%D0%BC%D0%B5%D0%BD%D1%82
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install parser
+        run: |
+          python -m pip install --upgrade pip
+          git clone --depth 1 https://github.com/Eroloft/parser-2gis-new.git "$RUNNER_TEMP/parser-2gis"
+          pip install -e "$RUNNER_TEMP/parser-2gis"
+          google-chrome --version || chromium --version || true
+
+      - name: Parse 2GIS
+        shell: bash
+        run: |
+          mkdir -p data/2gis
+          parser-2gis-new \
+            -i ${{ matrix.urls }} \
+            -o "data/2gis/${{ matrix.city }}.json" \
+            -f json \
+            --chrome.headless yes \
+            --chrome.disable-images yes \
+            --chrome.silent-browser yes \
+            --parser.max-records 35 \
+            --parser.delay_between_clicks 80 \
+            --filters.dedup-franchises yes \
+            --filters.dedup-across-niches yes \
+            --filters.require-phone yes \
+            --filters.require-website yes \
+            --filters.min-reviews 1 \
+            --writer.verbose no
+
+      - name: Summarize
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          city = os.environ["CITY"]
+          p = Path(f"data/2gis/{city}.json")
+          rows = json.loads(p.read_text(encoding="utf-8-sig")) if p.exists() else []
+          def contacts(item):
+              out={}
+              for group in item.get("contact_groups") or []:
+                  for c in group.get("contacts") or []:
+                      t=c.get("type"); v=c.get("text") or c.get("value") or c.get("url")
+                      if t and v: out.setdefault(t,[]).append(v)
+              return out
+          slim=[]
+          for x in rows:
+              rv=x.get("reviews") or {}
+              c=contacts(x)
+              slim.append({
+                  "name": (x.get("name_ex") or {}).get("primary") or x.get("name"),
+                  "address": (x.get("address_name") or ""),
+                  "rating": rv.get("general_rating"),
+                  "reviews": rv.get("general_review_count"),
+                  "phones": c.get("phone",[]),
+                  "whatsapp": c.get("whatsapp",[]),
+                  "telegram": c.get("telegram",[]),
+                  "email": c.get("email",[]),
+                  "website": c.get("website",[]),
+                  "2gis_id": x.get("id"),
+              })
+          out=Path(f"data/2gis/{city}-slim.json")
+          out.write_text(json.dumps(slim,ensure_ascii=False,indent=2),encoding="utf-8")
+          print(f"{city}: {len(slim)} qualified companies")
+          print(json.dumps(slim[:8],ensure_ascii=False,indent=2))
+          PY
+        env:
+          CITY: ${{ matrix.city }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: 2gis-${{ matrix.city }}
+          path: |
+            data/2gis/${{ matrix.city }}.json
+            data/2gis/${{ matrix.city }}-slim.json
