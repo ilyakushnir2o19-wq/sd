@@ -1,0 +1,57 @@
+{
+  "slug": "lead-tiptop",
+  "name": "TIP TOP Detailing",
+  "shortName": "TIP TOP",
+  "category": "Оклейка · Детейлинг · Москва",
+  "city": "Москва",
+  "phone": "+79925555512",
+  "address": "Москва, Складочная ул., 22",
+  "accent": "#4E8CFF",
+  "hero": "https://cdn4.telesco.pe/file/QeTqIkStr2xusB89zKFcysSLenA9v12bE9ruvtYtizq23MCuG8tucWsrJhR1xq_4gQ81VzkSxrlaMJfASUK8_8qY89jSS0KoPkjDUFyqOiDety69hjTStn9VVusL9WftN7z8n7AKECAo_YNLvIIgbpgRocRdYq_ZlbHzZL5RqBtoNol-J2LG2vVmRQ32MUpyL_jvbdDfrrWCFsDiaBM1ZeFRhsp9aPc8zYmEgRPcVFZ2cyakFLBhWZN2M48GKKqp6BgjTnZHWz49Ud4KSCMOpAUmlz23G3cA4xu-m3VspicgxWI92ml_DDkET89wtd3BGKDh_7PVMsJweBb91RKXqg.jpg",
+  "appDescription": "Защита кузова, цветной PPF, шумоизоляция и премиальный детейлинг",
+  "metric2Value": "5.0",
+  "metric2Label": "рейтинг Яндекс",
+  "priceLabel": "индивидуальный расчёт",
+  "priceCaption": "по автомобилю",
+  "bookingTitle": "Расчёт и запись без лишних сообщений",
+  "bookingCopy": "Клиент отмечает услугу и автомобиль — менеджер получает структурированный запрос.",
+  "tgContact": "@tiptopdetailing",
+  "sourceChannel": "@detailingtiptop",
+  "services": [
+    {
+      "id": "ppf",
+      "name": "Полная оклейка PPF",
+      "duration": "по расчёту",
+      "priceLabel": "инд. расчёт",
+      "note": "глянец / сатин"
+    },
+    {
+      "id": "risk",
+      "name": "Зоны риска",
+      "duration": "по расчёту",
+      "priceLabel": "инд. расчёт",
+      "note": "PPF"
+    },
+    {
+      "id": "noise",
+      "name": "Шумоизоляция",
+      "duration": "по расчёту",
+      "priceLabel": "инд. расчёт",
+      "note": "салон / арки"
+    },
+    {
+      "id": "polish",
+      "name": "Полировка + керамика",
+      "duration": "по записи",
+      "priceLabel": "инд. расчёт",
+      "note": "детейлинг"
+    }
+  ],
+  "gallery": [
+    {
+      "src": "https://cdn4.telesco.pe/file/QeTqIkStr2xusB89zKFcysSLenA9v12bE9ruvtYtizq23MCuG8tucWsrJhR1xq_4gQ81VzkSxrlaMJfASUK8_8qY89jSS0KoPkjDUFyqOiDety69hjTStn9VVusL9WftN7z8n7AKECAo_YNLvIIgbpgRocRdYq_ZlbHzZL5RqBtoNol-J2LG2vVmRQ32MUpyL_jvbdDfrrWCFsDiaBM1ZeFRhsp9aPc8zYmEgRPcVFZ2cyakFLBhWZN2M48GKKqp6BgjTnZHWz49Ud4KSCMOpAUmlz23G3cA4xu-m3VspicgxWI92ml_DDkET89wtd3BGKDh_7PVMsJweBb91RKXqg.jpg",
+      "title": "GAC S7",
+      "meta": "сатин + прозрачный PPF"
+    }
+  ]
+}
