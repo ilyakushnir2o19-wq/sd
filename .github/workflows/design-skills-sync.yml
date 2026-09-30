@@ -1,0 +1,87 @@
+name: Design Skills Sync
+
+on:
+  push:
+    paths:
+      - ".github/workflows/design-skills-sync.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install Impeccable for Claude Code
+        run: |
+          npx -y impeccable@latest install \
+            --providers=claude \
+            --scope=project \
+            --no-hooks
+
+      - name: Install selected Taste skills
+        shell: bash
+        run: |
+          rm -rf /tmp/taste-skill
+          git clone --depth 1 https://github.com/Leonxlnx/taste-skill.git /tmp/taste-skill
+
+          mkdir -p .claude/skills/gpt-taste
+          mkdir -p .claude/skills/redesign
+          mkdir -p .claude/skills/image-to-code
+          mkdir -p .claude/skills/imagegen-mobile
+          mkdir -p .claude/skills/taste
+
+          cp /tmp/taste-skill/skills/gpt-tasteskill/SKILL.md .claude/skills/gpt-taste/SKILL.md
+          cp /tmp/taste-skill/skills/redesign-skill/SKILL.md .claude/skills/redesign/SKILL.md
+          cp /tmp/taste-skill/skills/image-to-code-skill/SKILL.md .claude/skills/image-to-code/SKILL.md
+          cp /tmp/taste-skill/skills/imagegen-frontend-mobile/SKILL.md .claude/skills/imagegen-mobile/SKILL.md
+          cp /tmp/taste-skill/LICENSE .claude/skills/taste/LICENSE
+
+          curl -fsSL https://raw.githubusercontent.com/pbakaus/impeccable/main/LICENSE \
+            -o .claude/skills/impeccable/LICENSE
+
+          cat > .claude/skills/DESIGN-SKILLS.md <<'EOF'
+          # Design taste skills
+
+          Project-local design skills used to reduce generic AI-generated frontend patterns.
+
+          ## Impeccable
+          - Upstream: https://github.com/pbakaus/impeccable
+          - License: Apache-2.0
+          - Installed with the upstream CLI for Claude Code.
+          - Hooks are intentionally disabled; invoke critique/audit/polish deliberately.
+
+          ## Taste Skill
+          - Upstream: https://github.com/Leonxlnx/taste-skill
+          - License: MIT
+          - Installed subset:
+            - gpt-taste
+            - redesign
+            - image-to-code
+            - imagegen-mobile
+
+          Refresh deliberately and re-run showroom visual verification after updates.
+          EOF
+
+      - name: Commit synced skills
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .claude/skills
+          if git diff --cached --quiet; then
+            echo "Design skills already up to date."
+            exit 0
+          fi
+          git commit -m "chore: sync Impeccable and Taste design skills [skip ci]"
+          git push origin HEAD
