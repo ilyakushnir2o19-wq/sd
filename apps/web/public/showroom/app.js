@@ -30,7 +30,12 @@ function node(tag, cls, text) {
 function add(parent, ...children) { children.filter(Boolean).forEach(c => parent.append(c)); return parent }
 function icon(name, cls) { const n = node('i', cls || ''); n.innerHTML = icons[name] || ''; return n }
 function money(value) { return new Intl.NumberFormat('ru-RU').format(Number(value) || 0) + ' ₽' }
-function bg(el, url) { if (url) el.style.backgroundImage = 'url("' + String(url).replace(/["\\]/g, '') + '")'; return el }
+function bg(el, url) {
+  const safe = String(url || '').replace(/["\\]/g, '')
+  const fallback = './assets/automotive-fallback.svg'
+  el.style.backgroundImage = safe ? 'url("' + safe + '"), url("' + fallback + '")' : 'url("' + fallback + '")'
+  return el
+}
 function call() { if (biz.phone) location.href = 'tel:' + biz.phone }
 function route() { window.open('https://yandex.ru/maps/?text=' + encodeURIComponent(biz.address || biz.name), '_blank', 'noopener') }
 function gallery() { return (biz.gallery || []).map((g, i) => typeof g === 'string' ? { src:g, title:'Работа ' + (i + 1), meta:biz.shortName || biz.name } : g).filter(g => g && g.src) }
