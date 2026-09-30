@@ -1,27 +1,113 @@
 {
-  "slug":"voltage",
-  "name":"VOLTAGE Garage",
-  "shortName":"VOLTAGE",
-  "category":"Автосервис · Екатеринбург",
-  "headline":"Сервис без ожидания на линии.",
-  "subheadline":"Выберите работу, время и приезжайте. Остальное уже подготовим.",
-  "phone":"+73430000000",
-  "address":"Екатеринбург, ул. Машинная, 42",
-  "hours":"08:00–21:00",
-  "rating":"4.8",
-  "reviewsLabel":"243 отзыва",
-  "accent":"#ff5b36",
-  "hero":"https://images.unsplash.com/photo-1487754180451-c456f719a1fc?auto=format&fit=crop&w=1200&q=85",
-  "aiExample":"На скорости бьёт руль, что проверить?",
-  "proof":[
-    {"title":"Диагностика","text":"Согласуем до ремонта"},
-    {"title":"История работ","text":"Всё по автомобилю в одном месте"}
+  "slug": "voltage",
+  "name": "VOLTAGE Garage",
+  "shortName": "VOLTAGE",
+  "logoMark": "V",
+  "brandLine": "garage & service",
+  "category": "Автосервис · Екатеринбург",
+  "city": "Екатеринбург",
+  "headline": "Сервис без ожидания на линии.",
+  "subheadline": "Диагностика и ремонт по записи. Выбираете время — мы готовим пост и мастера.",
+  "phone": "+73430000000",
+  "address": "Екатеринбург, ул. Машинная, 42",
+  "hours": "08:00–21:00",
+  "status": "Открыто до 21:00",
+  "rating": "4.8",
+  "reviewsLabel": "243 отзыва",
+  "accent": "#FF5B36",
+  "accentSecondary": "#FFB35C",
+  "themeColor": "#09090B",
+  "nearestLabel": "Завтра",
+  "nearestSlot": "10:30",
+  "nearestNote": "Диагностика займёт около 45 минут",
+  "busySlots": [
+    "12:00",
+    "16:30"
   ],
-  "slots":["09:00","10:30","12:00","14:00","16:30","18:30"],
-  "services":[
-    {"id":"diagnostic","name":"Диагностика ходовой","duration":"45 мин","price":1800,"note":"подъёмник включён","description":"Проверим подвеску, рулевое и основные узлы."},
-    {"id":"oil","name":"Замена масла","duration":"50 мин","price":2200,"note":"без стоимости масла","description":"Замена масла и фильтра, контроль уровней жидкостей."},
-    {"id":"brakes","name":"Тормозная система","duration":"1 ч 30 мин","price":4200,"note":"диагностика + работа","description":"Проверка дисков, колодок, суппортов и жидкости."},
-    {"id":"alignment","name":"Сход-развал 3D","duration":"1 час","price":3500,"note":"легковой автомобиль","description":"Измерение и регулировка углов установки колёс."}
+  "hero": "https://images.unsplash.com/photo-1487754180451-c456f719a1fc?auto=format&fit=crop&w=1400&q=88",
+  "about": "Городской автосервис: диагностика, ходовая, тормозная система, ТО и сход-развал.",
+  "routeNote": "Заезд со стороны ул. Машинной",
+  "galleryLabel": "в работе",
+  "gallery": [
+    {
+      "src": "https://images.unsplash.com/photo-1632823469850-1b7b1e8b7e8f?auto=format&fit=crop&w=1200&q=86",
+      "title": "Диагностика",
+      "meta": "ходовая"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1632823469905-1b9b1e8b7e9f?auto=format&fit=crop&w=1200&q=86",
+      "title": "Плановое ТО",
+      "meta": "масло + фильтры"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1486006920555-c77dcf18193c?auto=format&fit=crop&w=1200&q=86",
+      "title": "Тормоза",
+      "meta": "диагностика"
+    }
+  ],
+  "aiExample": "На скорости бьёт руль и машину тянет вправо. С чего начать?",
+  "aiAnswer": "Начните с диагностики ходовой и проверки углов установки колёс. Ближайшее окно — завтра в 10:30.",
+  "proof": [
+    {
+      "icon": "shield",
+      "title": "Сначала диагностика",
+      "text": "Ремонт после согласования"
+    },
+    {
+      "icon": "camera",
+      "title": "Покажем проблему",
+      "text": "Фото и комментарий мастера"
+    },
+    {
+      "icon": "clock",
+      "title": "Пост к вашему времени",
+      "text": "Без ожидания в очереди"
+    }
+  ],
+  "slots": [
+    "09:00",
+    "10:30",
+    "12:00",
+    "14:00",
+    "16:30",
+    "18:30"
+  ],
+  "services": [
+    {
+      "id": "diagnostic",
+      "name": "Диагностика ходовой",
+      "duration": "45 мин",
+      "price": 1800,
+      "note": "подъёмник включён",
+      "description": "Проверим подвеску, рулевое и основные узлы.",
+      "image": "https://images.unsplash.com/photo-1487754180451-c456f719a1fc?auto=format&fit=crop&w=800&q=82"
+    },
+    {
+      "id": "oil",
+      "name": "Замена масла",
+      "duration": "50 мин",
+      "price": 2200,
+      "note": "без стоимости масла",
+      "description": "Замена масла и фильтра, контроль уровней жидкостей.",
+      "image": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=82"
+    },
+    {
+      "id": "brakes",
+      "name": "Тормозная система",
+      "duration": "1 ч 30 мин",
+      "price": 4200,
+      "note": "диагностика + работа",
+      "description": "Проверка дисков, колодок, суппортов и жидкости.",
+      "image": "https://images.unsplash.com/photo-1486006920555-c77dcf18193c?auto=format&fit=crop&w=800&q=82"
+    },
+    {
+      "id": "alignment",
+      "name": "Сход-развал 3D",
+      "duration": "1 час",
+      "price": 3500,
+      "note": "легковой автомобиль",
+      "description": "Измерение и регулировка углов установки колёс.",
+      "image": "https://images.unsplash.com/photo-1493238792000-8113da705763?auto=format&fit=crop&w=800&q=82"
+    }
   ]
 }
