@@ -140,3 +140,16 @@ def test_workbook_crm_dispatch_routes_to_attio(monkeypatch):
         "value": "Attio: upserted person-789",
         "error": None,
     }
+
+
+def test_settings_exposes_attio_integration():
+    from apps.api.routers.settings import INTEGRATIONS
+
+    integration = next(item for item in INTEGRATIONS if item["id"] == "attio")
+    assert integration["name"] == "Attio"
+    assert integration["fields"] == [{
+        "key": "ATTIO_API_TOKEN",
+        "label": "API Token",
+        "secret": True,
+        "placeholder": "Attio workspace token",
+    }]
