@@ -1,0 +1,72 @@
+name: 2GIS Quick Hunt
+
+on:
+  push:
+    paths:
+      - ".github/workflows/2gis-quick.yml"
+  workflow_dispatch:
+
+jobs:
+  parse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install parser
+        run: |
+          git clone --depth 1 https://github.com/Eroloft/parser-2gis-new.git "$RUNNER_TEMP/parser-2gis"
+          pip install -e "$RUNNER_TEMP/parser-2gis"
+          google-chrome --version
+      - name: Parse
+        run: |
+          mkdir -p data/2gis
+          parser-2gis-new \
+            -i \
+              "https://2gis.ru/moscow/search/%D0%B4%D0%B8%D1%81%D1%82%D1%80%D0%B8%D0%B1%D1%8C%D1%8E%D1%82%D0%BE%D1%80%D1%8B" \
+              "https://2gis.ru/moscow/search/%D0%BE%D0%BF%D1%82%D0%BE%D0%B2%D1%8B%D0%B5%20%D0%BA%D0%BE%D0%BC%D0%BF%D0%B0%D0%BD%D0%B8%D0%B8" \
+            -o data/2gis/quick.json -f json \
+            --chrome.headless yes \
+            --chrome.disable-images yes \
+            --chrome.silent-browser yes \
+            --parser.max-records 12 \
+            --parser.delay_between_clicks 50 \
+            --filters.dedup-franchises yes \
+            --filters.dedup-across-niches yes \
+            --filters.require-phone yes \
+            --filters.require-website yes \
+            --writer.verbose no
+      - name: Slim result
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          rows=json.loads(Path("data/2gis/quick.json").read_text(encoding="utf-8-sig"))
+          slim=[]
+          for x in rows:
+              contacts={}
+              for g in x.get("contact_groups") or []:
+                  for c in g.get("contacts") or []:
+                      t=c.get("type")
+                      v=c.get("text") or c.get("value") or c.get("url")
+                      if t and v: contacts.setdefault(t,[]).append(v)
+              r=x.get("reviews") or {}
+              slim.append({
+                  "name": (x.get("name_ex") or {}).get("primary") or x.get("name"),
+                  "address": x.get("address_name",""),
+                  "rating": r.get("general_rating"),
+                  "reviews": r.get("general_review_count"),
+                  "phone": contacts.get("phone",[]),
+                  "whatsapp": contacts.get("whatsapp",[]),
+                  "telegram": contacts.get("telegram",[]),
+                  "email": contacts.get("email",[]),
+                  "website": contacts.get("website",[]),
+                  "rubrics": [r.get("name") for r in x.get("rubrics",[]) if r.get("name")],
+                  "2gis_id": x.get("id"),
+              })
+          Path("data/2gis/quick-slim.json").write_text(json.dumps(slim,ensure_ascii=False,indent=2),encoding="utf-8")
+          print(json.dumps(slim,ensure_ascii=False,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: 2gis-quick
+          path: data/2gis/quick-slim.json
