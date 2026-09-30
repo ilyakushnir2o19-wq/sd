@@ -374,6 +374,10 @@ def score_opportunity_evidence(value: Any) -> dict[str, Any]:
         kill_reasons.append("score_below_45")
 
     if not kill_reasons:
+        if risk_level in {"high", "critical", "regulated"}:
+            review_reasons.append("high_risk_requires_human_gate")
+        if relationship_heavy:
+            review_reasons.append("relationship_heavy_scope")
         if len(source_domains) < 2:
             review_reasons.append("needs_second_independent_source")
         if not budget_signals:
